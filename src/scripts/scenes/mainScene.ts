@@ -16,14 +16,20 @@ export default class MainScene extends Phaser.Scene {
   create() {
     this.fpsText = new FpsText(this)
 
-    let mappy = this.add.tilemap("map");
+    const map = this.add.tilemap("map");
 
-    let terrain = mappy.addTilesetImage("terrain_atlas", "terrain");
+    const terrain = map.addTilesetImage("terrain_atlas", "terrain");
 
     //layers
-    let botLayer = mappy.createStaticLayer("bot", [terrain], 0, 0).setDepth(-1);
-    let topLayer = mappy.createStaticLayer("top", [terrain], 0, 0);
+    const botLayer = map.createStaticLayer("bot", [terrain], 0, 0).setDepth(-1);
+    const topLayer = map.createStaticLayer("top", [terrain], 0, 0);
 
+    var cursors = this.input.keyboard.addKeys({
+      up: 'up',
+      down: 'down',
+      left: 'left',
+      right: 'right'
+  });
 
     // display the Phaser.VERSION
     this.add
@@ -36,5 +42,26 @@ export default class MainScene extends Phaser.Scene {
 
   update() {
     this.fpsText.update()
+    var cursors = this.input.keyboard.createCursorKeys();
+    if (this.input.keyboard.addKey('D').isDown)
+    {
+        this.cameras.main.x -= 10;
+    }
+
+    if (this.input.keyboard.addKey('A').isDown)
+    {
+        this.cameras.main.x += 10;
+    }
+
+    if (this.input.keyboard.addKey('S').isDown)
+    {
+        this.cameras.main.y -= 10;
+    }
+
+    if (this.input.keyboard.addKey('W').isDown)
+    {
+        this.cameras.main.y += 10;
+    }
+
   }
 }
