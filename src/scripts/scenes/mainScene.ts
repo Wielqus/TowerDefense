@@ -1,26 +1,23 @@
 import FpsText from '../objects/fpsText'
+import Map from '../objects/Map'
+import { maps } from '../../collections/Maps';
 
 export default class MainScene extends Phaser.Scene {
   fpsText: Phaser.GameObjects.Text
   controls: Phaser.Cameras.Controls.FixedKeyControl
+  map:  Map
 
   constructor() {
     super({ key: 'MainScene' })
+    this.map = new Map(this, maps[0])
   }
 
   preload(){
-    this.load.image("terrain", "./assets/image/terrain_atlas.png");
-    this.load.tilemapTiledJSON("map", "./assets/maps/map.json");
-
+    this.map.preload()
   }
 
   create() {
-    const map = this.make.tilemap({key: 'map'});
-    const terrain = map.addTilesetImage("terrain_atlas", "terrain");
-
-    //layers
-    const botLayer = map.createStaticLayer("bot", [terrain], 0, 0)
-    this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    this.map.create()
   
     // Camera movement settings
     const controlConfig = {
