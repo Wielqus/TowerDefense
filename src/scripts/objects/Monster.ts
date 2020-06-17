@@ -5,7 +5,10 @@ export default class Monster extends Phaser.GameObjects.Sprite {
         super(scene, 0, 0, "dude")
         this.scene = scene
         this.scene.add.existing(this)
+        this.scene.physics.add.existing(this)
         this.scene.events.on("update", (event) => {this.update()})
+        
+        
         this.create()
     }
 
