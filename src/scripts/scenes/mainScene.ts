@@ -45,5 +45,6 @@ export default class MainScene extends Phaser.Scene {
   update() {
     this.fpsText.update(this.time) // Update Fps text
     this.controls.update(50); //Update camera
+    this.map.update()
   }
 }

@@ -28,6 +28,7 @@
     "workbox-webpack-plugin": "^5.1.3"
   },
   "dependencies": {
+    "easystarjs": "^0.4.3",
     "phaser": "^3.23.0"
   }
 }
