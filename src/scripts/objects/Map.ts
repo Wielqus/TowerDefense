@@ -7,7 +7,7 @@ export default class Map {
   mapData: IMap
   map: Tilemaps.Tilemap
   pathFinder
-  paths: Array<Array<{ x: number, y: number }>>
+  paths: Array<Array<Phaser.Tilemaps.Tile>>
   graphics
 
 
@@ -94,7 +94,10 @@ export default class Map {
         })
         this.pathFinder.calculate()
       })
-      this.paths.push(bestPath)
+      
+      this.paths.push(bestPath.map(element => {
+        return this.map.getTileAt(element.x, element.y)
+      }))
 
     })
   }
@@ -133,8 +136,7 @@ export default class Map {
     this.graphics.clear();
     this.paths.forEach(path => {
       let points: Array<integer> = [];
-      path.forEach(element => {
-        let tile = this.map.getTileAt(element.x, element.y)
+      path.forEach(tile => {
         points.push(tile.pixelX + tile.width / 2)
         points.push(tile.pixelY + tile.height / 2)
       })
