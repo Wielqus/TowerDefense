@@ -7,7 +7,8 @@ export default class Map {
   mapData: IMap
   map: Tilemaps.Tilemap
   pathFinder
-  paths: Array<Array<{x: number, y: number}>>
+  paths: Array<Array<{ x: number, y: number }>>
+  graphics
 
 
   constructor(scene: Phaser.Scene, mapData: IMap) {
@@ -37,14 +38,15 @@ export default class Map {
     })
 
     this.scene.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+    this.graphics = this.scene.add.graphics();
     this.findPath(tileSets)
   }
 
   findPath(tileSets) {
 
     const acceptableTiles: Array<integer> = []
-    const startTiles: Array<{x: number, y: number}> = []
-    const finishTiles: Array<{x: number, y: number}> = []
+    const startTiles: Array<{ x: number, y: number }> = []
+    const finishTiles: Array<{ x: number, y: number }> = []
     const grid: Array<Array<integer>> = [];
 
     for (let y: number = 0; y < this.map.height; y++) {
@@ -80,12 +82,12 @@ export default class Map {
     this.pathFinder.setAcceptableTiles(acceptableTiles)
 
     startTiles.forEach((start, index) => {
-      let paths: Array<Array<{x: number, y: number}>> = []
-      let bestPath: Array<{x: number, y: number}> = []
+      let paths: Array<Array<{ x: number, y: number }>> = []
+      let bestPath: Array<{ x: number, y: number }> = []
       finishTiles.forEach((meta, key) => {
         this.pathFinder.findPath(start.x, start.y, meta.x, meta.y, (path) => {
-          if(path){
-            if(bestPath.length === 0 || bestPath.length > path.length){
+          if (path) {
+            if (bestPath.length === 0 || bestPath.length > path.length) {
               bestPath = path
             }
           }
@@ -93,40 +95,42 @@ export default class Map {
         this.pathFinder.calculate()
       })
       this.paths.push(bestPath)
-      
+
     })
-    this.drawPaths()
   }
 
-  drawPaths(){
-      this.paths.forEach(path =>{
-        let points: Array<integer> = [];
-        path.forEach(element => {
-          let tile = this.map.getTileAt(element.x, element.y)
-          points.push(tile.pixelX + tile.width / 2 )
-          points.push(tile.pixelY + tile.height / 2)
-        })
+  clearPaths() {
+    this.graphics.clear();
+  }
 
-        var curve = new Phaser.Curves.Spline(points);
-        let drawPath = { t: 0, vec: new Phaser.Math.Vector2() };
-
-        curve = new Phaser.Curves.Spline(points);
-
-        const graphics = this.scene.add.graphics();
-
-        graphics.clear();
-
-        graphics.lineStyle(2, 0xffffff, 1);
-
-        curve.draw(graphics, 64);
-
-        curve.getPoint(drawPath.t, drawPath.vec);
-
-        graphics.fillStyle(0x00FF00, 1);
-        graphics.fillCircle(drawPath.vec.x, drawPath.vec.y, 8);
-        graphics.fillStyle(0xFF0000, 1);
-        graphics.fillCircle(points[points.length - 2], points[points.length - 1], 8)
+  drawPaths() {
+    this.graphics.clear();
+    this.paths.forEach(path => {
+      let points: Array<integer> = [];
+      path.forEach(element => {
+        let tile = this.map.getTileAt(element.x, element.y)
+        points.push(tile.pixelX + tile.width / 2)
+        points.push(tile.pixelY + tile.height / 2)
       })
+
+      var curve = new Phaser.Curves.Spline(points);
+      let drawPath = { t: 0, vec: new Phaser.Math.Vector2() };
+
+      curve = new Phaser.Curves.Spline(points);
+
+      
+
+      this.graphics.lineStyle(2, 0xffffff, 1);
+
+      curve.draw(this.graphics, 64);
+
+      curve.getPoint(drawPath.t, drawPath.vec);
+
+      this.graphics.fillStyle(0x00FF00, 1);
+      this.graphics.fillCircle(drawPath.vec.x, drawPath.vec.y, 8);
+      this.graphics.fillStyle(0xFF0000, 1);
+      this.graphics.fillCircle(points[points.length - 2], points[points.length - 1], 8)
+    })
   }
 
   update() {
