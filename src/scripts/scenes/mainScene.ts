@@ -43,7 +43,12 @@ export default class MainScene extends Phaser.Scene {
     };
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
 
-    new Monster(this, this.map.getRandomPath())
+    setInterval(() => {
+      let path = this.map.getRandomPath()
+      console.log(path)
+      new Monster(this, path)
+    }, 500)
+    
   }
 
   update(time, delta) {

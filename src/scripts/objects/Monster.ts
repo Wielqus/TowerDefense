@@ -9,7 +9,7 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     constructor(scene: Phaser.Scene, path: Array<Phaser.Tilemaps.Tile>) {
         super(scene, path[0].pixelX, path[0].pixelY, "dude")
         this.scene = scene
-        this.path = path
+        this.path = Array.from(path)
         this.actualPathElement = 0
         this.timeFromLastMove = 0
         this.scene.add.existing(this)
@@ -29,13 +29,15 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
             this.scene.physics.moveTo(this, nextPoint.pixelX, nextPoint.pixelY, 300);
         } else {
             this.destroy()
+            this.setActive(false)
+            this.setInteractive(false)
         }
     }
 
     update(time?, delta?) {
         if (this.path[0]) {
             const distance = Phaser.Math.Distance.Between(this.x, this.y, this.path[0].pixelX, this.path[0].pixelY);
-            if (distance < 50) {
+            if (distance < 100) {
                 this.move()
             }
 
