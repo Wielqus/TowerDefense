@@ -1,44 +1,50 @@
 import IMap from '../Interfaces/IMap';
-import IPath from '../Interfaces/IPath';
 
-export default class Monster extends Phaser.GameObjects.Sprite {
+export default class Monster extends Phaser.Physics.Arcade.Sprite {
     scene: Phaser.Scene
-    path: IPath
+    path: Array<Phaser.Tilemaps.Tile>
+    actualPathElement: integer
+    timeFromLastMove: number
 
-    constructor(scene: Phaser.Scene, path: IPath) {
-        console.log(path[0])
-        super(scene, path[0].x, path[0].y, "dude")
+    constructor(scene: Phaser.Scene, path: Array<Phaser.Tilemaps.Tile>) {
+        super(scene, path[0].pixelX, path[0].pixelY, "dude")
         this.scene = scene
         this.path = path
+        this.actualPathElement = 0
+        this.timeFromLastMove = 0
         this.scene.add.existing(this)
         this.scene.physics.add.existing(this)
-        this.scene.events.on("update", (event) => {this.update()})
+        this.scene.events.on("update", (event) => { this.update() })
         this.create()
     }
 
 
     create() {
-        console.log(this.path)
+        this.move()
     }
 
-    update() {
-        if(this.scene.input.keyboard.addKey("left").isDown){
-            this.setX(this.x - 5);
-        }
-        if(this.scene.input.keyboard.addKey("right").isDown){
-            this.setX(this.x + 5);
-        }
-        if(this.scene.input.keyboard.addKey("down").isDown){
-            this.setY(this.y + 5);
-        }
-        if(this.scene.input.keyboard.addKey("up").isDown){
-            this.setY(this.y - 5);
+    move() {
+        let nextPoint = this.path.shift()
+        if (nextPoint) {
+            this.scene.physics.moveTo(this, nextPoint.pixelX, nextPoint.pixelY, 300);
+        } else {
+            this.destroy()
         }
     }
 
-    public static getSprites(): Array<{name: string, source: string}>{
+    update(time?, delta?) {
+        if (this.path[0]) {
+            const distance = Phaser.Math.Distance.Between(this.x, this.y, this.path[0].pixelX, this.path[0].pixelY);
+            if (distance < 50) {
+                this.move()
+            }
+
+        }
+    }
+
+    public static getSprites(): Array<{ name: string, source: string }> {
         return [
-            {"name": "dude", "source":"./assets/monsters/dude.png"}
+            { "name": "dude", "source": "./assets/monsters/dude.png" }
         ]
     }
 }

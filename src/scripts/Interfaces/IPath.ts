@@ -1,3 +1,3 @@
 export default interface IPath{
-    [position: number]: {x: number, y: number};
+    [position: number]: Phaser.Tilemaps.Tile;
   }

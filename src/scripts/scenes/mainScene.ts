@@ -46,7 +46,7 @@ export default class MainScene extends Phaser.Scene {
     new Monster(this, this.map.getRandomPath())
   }
 
-  update() {
+  update(time, delta) {
     this.debug.set(1, `fps: ${Math.floor(this.game.loop.actualFps)}`)
     this.controls.update(50); //Update camera
     this.map.update()

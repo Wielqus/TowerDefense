@@ -103,7 +103,7 @@ export default class Map {
   }
 
   getRandomPath(){
-    return this.paths[Math.floor(Math.random() * this.paths.length) - 1]
+    return this.paths[Math.floor(Math.random() * this.paths.length)]
   }
 
   debugOn(){
