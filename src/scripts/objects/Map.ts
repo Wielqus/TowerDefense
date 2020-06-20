@@ -99,8 +99,34 @@ export default class Map {
     })
   }
 
-  clearPaths() {
+  debugOn(){
+    this.drawPaths()
+    this.overlayFields()
+    
+  }
+
+  debugOff(){
     this.graphics.clear();
+  }
+
+  overlayFields(){
+    this.map.forEachTile(tile => {
+      if(tile.properties.start){
+        let rect = new Phaser.Geom.Rectangle(tile.pixelX, tile.pixelY, tile.width, tile.height)
+        this.graphics.fillStyle(0x00FF00, 0.3)
+        this.graphics.fillRectShape(rect);
+      }
+      else if(tile.properties.path){
+        let rect = new Phaser.Geom.Rectangle(tile.pixelX, tile.pixelY, tile.width, tile.height)
+        this.graphics.fillStyle(0xFFFF00, 0.3)
+        this.graphics.fillRectShape(rect);
+      }
+      else if(tile.properties.meta){
+        let rect = new Phaser.Geom.Rectangle(tile.pixelX, tile.pixelY, tile.width, tile.height)
+        this.graphics.fillStyle(0xFF0000, 0.3)
+        this.graphics.fillRectShape(rect);
+      }
+    })
   }
 
   drawPaths() {
@@ -118,18 +144,9 @@ export default class Map {
 
       curve = new Phaser.Curves.Spline(points);
 
-      
-
       this.graphics.lineStyle(2, 0xffffff, 1);
 
       curve.draw(this.graphics, 64);
-
-      curve.getPoint(drawPath.t, drawPath.vec);
-
-      this.graphics.fillStyle(0x00FF00, 1);
-      this.graphics.fillCircle(drawPath.vec.x, drawPath.vec.y, 8);
-      this.graphics.fillStyle(0xFF0000, 1);
-      this.graphics.fillCircle(points[points.length - 2], points[points.length - 1], 8)
     })
   }
 

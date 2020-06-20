@@ -31,7 +31,7 @@ export default class MainScene extends Phaser.Scene {
     this.debug.create()
     this.debug.add(`Phaser v${Phaser.VERSION}`)
     this.debug.add(`fps: ${Math.floor(this.game.loop.actualFps)}`)
-    this.debug.add("Toogle paths - p", "p", () => this.map.drawPaths(), () => this.map.clearPaths())
+    this.debug.add("Toogle paths - p", "p", () => this.map.debugOn(), () => this.map.debugOff())
     // Camera movement settings
     const controlConfig = {
       camera: this.cameras.main,
