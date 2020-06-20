@@ -37,8 +37,10 @@ export default class Debug{
 
     getDebugMessages() : string{
         return this.debugToolsList.map(element => {
-            return element.description
+            return `${element.description} ${element.key ? "- "+element.key : ""}`
         }).join("\n")
+
+
 
 
 
