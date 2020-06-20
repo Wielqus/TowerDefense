@@ -99,6 +99,10 @@ export default class Map {
     })
   }
 
+  getRandomPath(){
+    return this.paths[Math.floor(Math.random() * this.paths.length) - 1]
+  }
+
   debugOn(){
     this.drawPaths()
     this.overlayFields()

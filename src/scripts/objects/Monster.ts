@@ -1,20 +1,24 @@
+import IMap from '../Interfaces/IMap';
+import IPath from '../Interfaces/IPath';
+
 export default class Monster extends Phaser.GameObjects.Sprite {
     scene: Phaser.Scene
+    path: IPath
 
-    constructor(scene: Phaser.Scene) {
-        super(scene, 0, 0, "dude")
+    constructor(scene: Phaser.Scene, path: IPath) {
+        console.log(path[0])
+        super(scene, path[0].x, path[0].y, "dude")
         this.scene = scene
+        this.path = path
         this.scene.add.existing(this)
         this.scene.physics.add.existing(this)
         this.scene.events.on("update", (event) => {this.update()})
-        
-        
         this.create()
     }
 
 
     create() {
-        
+        console.log(this.path)
     }
 
     update() {
