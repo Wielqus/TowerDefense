@@ -1,5 +1,6 @@
 import FpsText from '../objects/fpsText'
 import Map from '../objects/Map'
+import Monster from '../objects/Monster'
 import { maps } from '../../collections/Maps';
 
 export default class MainScene extends Phaser.Scene {
@@ -14,11 +15,16 @@ export default class MainScene extends Phaser.Scene {
 
   preload(){
     this.map.preload()
+    Monster.getSprites().forEach(sprite => {
+      this.load.spritesheet(sprite.name, sprite.source, {
+        frameWidth: 32,
+        frameHeight: 48
+      })
+    })
   }
 
   create() {
     this.map.create()
-  
     // Camera movement settings
     const controlConfig = {
         camera: this.cameras.main,
@@ -40,6 +46,7 @@ export default class MainScene extends Phaser.Scene {
       .setOrigin(1, 0)
 
       this.fpsText = new FpsText(this)  
+      new Monster(this)
   }
 
   update() {
