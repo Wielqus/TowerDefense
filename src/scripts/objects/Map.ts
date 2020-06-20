@@ -2,29 +2,32 @@ import IMap from '../Interfaces/IMap';
 import { Tilemaps } from 'phaser';
 var easystarjs = require('easystarjs');
 
-export default class Map{
+export default class Map {
   scene: Phaser.Scene
   mapData: IMap
   map: Tilemaps.Tilemap
   pathFinder
-  
+  paths: Array<Array<{x: number, y: number}>>
 
-  constructor(scene :Phaser.Scene, mapData: IMap){
+
+  constructor(scene: Phaser.Scene, mapData: IMap) {
     this.scene = scene
-    this.mapData   = mapData
+    this.mapData = mapData
     this.pathFinder = new easystarjs.js();
+    this.pathFinder.enableSync();
+    this.paths = []
   }
 
 
-   preload(){
+  preload() {
     this.scene.load.tilemapTiledJSON("map", this.mapData.jsonFile);
     this.mapData.tileSets.forEach(tileSet => {
       this.scene.load.image(tileSet.name, tileSet.source)
     })
-   }
+  }
 
-   create(){
-    this.map = this.scene.make.tilemap({key: 'map'});
+  create() {
+    this.map = this.scene.make.tilemap({ key: 'map' });
     const tileSets = this.mapData.tileSets.map(tileSet => {
       return this.map.addTilesetImage(tileSet.name, tileSet.name)
     })
@@ -35,99 +38,98 @@ export default class Map{
 
     this.scene.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     this.findPath(tileSets)
-   }
+  }
 
-   findPath(tileSets){
-     
-      
-    let acceptableTiles: Array<integer> = []
-    let startTiles: Array<integer> = []
-    let finishTiles: Array<integer> = []
-    var grid: Array<Array<integer>> = [];
-    var tileset = tileSets[0];
-    var properties = tileset.tileProperties;
-    for(var y:number = 0; y < this.map.height; y++){
-        var col: Array<integer> = [];
-        for(var x:number = 0; x < this.map.width; x++){
-            // In each cell we store the ID of the tile, which corresponds
-            // to its index in the tileset of the map ("ID" field in Tiled)
-            col.push(this.map.getTileAt(x,y).index);
-        }
-        grid.push(col);
+  findPath(tileSets) {
+
+    const acceptableTiles: Array<integer> = []
+    const startTiles: Array<{x: number, y: number}> = []
+    const finishTiles: Array<{x: number, y: number}> = []
+    const grid: Array<Array<integer>> = [];
+
+    for (let y: number = 0; y < this.map.height; y++) {
+      let col: Array<integer> = [];
+      for (let x: number = 0; x < this.map.width; x++) {
+        // In each cell we store the ID of the tile, which corresponds
+        // to its index in the tileset of the map ("ID" field in Tiled)
+        col.push(this.map.getTileAt(x, y).index);
+      }
+      grid.push(col);
     }
 
+    this.pathFinder.setGrid(grid)
 
     this.map.forEachTile(tile => {
-      if(tile.properties.path || tile.properties.start || tile.properties.meta){
+      if (tile.properties.path || tile.properties.start || tile.properties.meta) {
         acceptableTiles.push(tile.index)
       }
-      if(tile.properties.start){
-        startTiles.push(tile.x)
-        startTiles.push(tile.y)
+      if (tile.properties.start) {
+        startTiles.push({
+          x: tile.x,
+          y: tile.y
+        })
       }
-      if(tile.properties.meta){
-        finishTiles.push(tile.x)
-        finishTiles.push(tile.y)
+      if (tile.properties.meta) {
+        finishTiles.push({
+          x: tile.x,
+          y: tile.y
+        })
       }
     })
-  
-    console.log(acceptableTiles)
-  console.log(startTiles)
-  console.log(grid)
-  console.log(finishTiles)
-    this.pathFinder.setGrid(grid)
-    console.log(grid)
-     
-    
-     this.pathFinder.setAcceptableTiles(acceptableTiles)
-     console.log(this.pathFinder)
-     this.pathFinder.findPath(startTiles[0], startTiles[1], finishTiles[0], finishTiles[1], (path) => {
-      if (path === null) {
-        console.log("Path was not found.");
-      } else {
-        console.log("Path was found. The first Point is " + path[0].x + " " + path[0].y);
-        console.log("path", path)
-    
-    var points: Array<integer> = [];
 
+    this.pathFinder.setAcceptableTiles(acceptableTiles)
 
-
-    
-
-        path.forEach(element => {
-          points.push(this.map.getTileAt(element.x, element.y).pixelX)
-          points.push(this.map.getTileAt(element.x, element.y).pixelY)
+    startTiles.forEach((start, index) => {
+      let paths: Array<Array<{x: number, y: number}>> = []
+      let bestPath: Array<{x: number, y: number}> = []
+      finishTiles.forEach((meta, key) => {
+        this.pathFinder.findPath(start.x, start.y, meta.x, meta.y, (path) => {
+          if(path){
+            if(bestPath.length === 0 || bestPath.length > path.length){
+              bestPath = path
+            }
+          }
         })
-        console.log(points)
+        this.pathFinder.calculate()
+      })
+      this.paths.push(bestPath)
+      
+    })
+    this.drawPaths()
+  }
+
+  drawPaths(){
+      this.paths.forEach(path =>{
+        let points: Array<integer> = [];
+        path.forEach(element => {
+          let tile = this.map.getTileAt(element.x, element.y)
+          points.push(tile.pixelX + tile.width / 2 )
+          points.push(tile.pixelY + tile.height / 2)
+        })
+
         var curve = new Phaser.Curves.Spline(points);
+        let drawPath = { t: 0, vec: new Phaser.Math.Vector2() };
 
-        path = { t: 0, vec: new Phaser.Math.Vector2() };
+        curve = new Phaser.Curves.Spline(points);
 
-    curve = new Phaser.Curves.Spline(points);
+        const graphics = this.scene.add.graphics();
 
-    var curvePoints = curve.points;
+        graphics.clear();
 
-    const graphics = this.scene.add.graphics();
+        graphics.lineStyle(2, 0xffffff, 1);
 
-    graphics.clear();
+        curve.draw(graphics, 64);
 
-    graphics.lineStyle(2, 0xffffff, 1);
+        curve.getPoint(drawPath.t, drawPath.vec);
 
-    curve.draw(graphics, 64);
-
-    curve.getPoint(path.t, path.vec);
-
-    graphics.fillStyle(0xffff00, 1);
-    graphics.fillCircle(path.vec.x, path.vec.y, 8);
-
-      }
-    });
-    this.pathFinder.calculate()
-    
-   }
-
+        graphics.fillStyle(0x00FF00, 1);
+        graphics.fillCircle(drawPath.vec.x, drawPath.vec.y, 8);
+        graphics.fillStyle(0xFF0000, 1);
+        graphics.fillCircle(points[points.length - 2], points[points.length - 1], 8)
+      })
+  }
 
   update() {
-    }
+
   }
-  
+}
