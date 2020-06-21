@@ -139,19 +139,23 @@ export default class Map {
     this.graphics.clear();
     this.paths.forEach(path => {
       let points: Array<integer> = [];
-      path.forEach(tile => {
-        points.push(tile.pixelX + tile.width / 2)
-        points.push(tile.pixelY + tile.height / 2)
+      
+      path.forEach((tile, index) => {
+        if(index !== 0){
+        let x = tile.pixelX + tile.width / 2
+        let y = tile.pixelY + tile.height / 2
+        let lastX = path[index - 1].pixelX + path[index - 1].width / 2
+        let lastY = path[index - 1].pixelY + path[index - 1].height / 2
+        console.log(lastX, lastY, x, y)
+        var line = new Phaser.Curves.Line([lastX, lastY, x, y]);
+        this.graphics.lineStyle(2, 0xffffff, 1);
+        line.draw(this.graphics);
+
+      }
       })
+    
 
-      var curve = new Phaser.Curves.Spline(points);
-      let drawPath = { t: 0, vec: new Phaser.Math.Vector2() };
-
-      curve = new Phaser.Curves.Spline(points);
-
-      this.graphics.lineStyle(2, 0xffffff, 1);
-
-      curve.draw(this.graphics, 64);
+      
     })
   }
 
