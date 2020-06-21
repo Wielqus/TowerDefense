@@ -27,10 +27,8 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
         let nextPoint = this.path.shift()
         if (nextPoint) {
             this.scene.physics.moveTo(this, nextPoint.pixelX, nextPoint.pixelY, 300);
-        } else {
+        }else{
             this.destroy()
-            this.setActive(false)
-            this.setInteractive(false)
         }
     }
 
@@ -40,7 +38,8 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
             if (distance < 50) {
                 this.move()
             }
-
+        }else{
+            this.move()
         }
     }
 
