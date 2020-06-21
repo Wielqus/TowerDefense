@@ -3,6 +3,7 @@ import Map from '../objects/Map'
 import Monster from '../objects/Monster'
 import Debug from '../objects/Debug'
 import { maps } from '../../collections/Maps';
+import {monsters} from '../../collections/Monsters'
 
 export default class MainScene extends Phaser.Scene {
   fpsText: Phaser.GameObjects.Text
@@ -18,12 +19,13 @@ export default class MainScene extends Phaser.Scene {
 
   preload() {
     this.map.preload()
-    Monster.getSprites().forEach(sprite => {
-      this.load.spritesheet(sprite.name, sprite.source, {
-        frameWidth: 32,
-        frameHeight: 48
+    for (let [key, monster] of Object.entries(monsters)) {
+      this.load.spritesheet(monster.name, `./assets/monsters/${monster.source}`, {
+        frameWidth: monster.width,
+        frameHeight: monster.height
       })
-    })
+    }
+
   }
 
   create() {
@@ -45,7 +47,7 @@ export default class MainScene extends Phaser.Scene {
     
     setInterval(() => {
       let path = this.map.getRandomPath()
-      new Monster(this, path)
+      new Monster(this, path, monsters.skeleton)
     }, 1000)
     
   }

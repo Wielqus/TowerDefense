@@ -1,15 +1,17 @@
-import IMap from '../Interfaces/IMap';
+import IMonster from '../Interfaces/IMonster'
 
 export default class Monster extends Phaser.Physics.Arcade.Sprite {
     scene: Phaser.Scene
     path: Array<Phaser.Tilemaps.Tile>
     actualPathElement: integer
     timeFromLastMove: number
+    monsterData: IMonster
 
-    constructor(scene: Phaser.Scene, path: Array<Phaser.Tilemaps.Tile>) {
-        super(scene, path[0].pixelX, path[0].pixelY, "dude")
+    constructor(scene: Phaser.Scene, path: Array<Phaser.Tilemaps.Tile>, monsterData: IMonster) {
+        super(scene, path[0].pixelX, path[0].pixelY, monsterData.name)
         this.scene = scene
         this.path = Array.from(path)
+        this.monsterData = monsterData
         this.actualPathElement = 0
         this.timeFromLastMove = 0
         this.scene.add.existing(this)
@@ -26,7 +28,7 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     move() {
         let nextPoint = this.path.shift()
         if (nextPoint) {
-            this.scene.physics.moveTo(this, nextPoint.pixelX, nextPoint.pixelY, 300);
+            this.scene.physics.moveTo(this, nextPoint.pixelX, nextPoint.pixelY, this.monsterData.speed);
         }else{
             this.destroy()
         }
@@ -41,11 +43,5 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
         }else{
             this.move()
         }
-    }
-
-    public static getSprites(): Array<{ name: string, source: string }> {
-        return [
-            { "name": "dude", "source": "./assets/monsters/dude.png" }
-        ]
     }
 }

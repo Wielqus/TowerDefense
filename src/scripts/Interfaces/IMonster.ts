@@ -4,4 +4,6 @@ export default interface IMap{
     source:     string,
     speed:      integer,
     damage:     integer,
+    width:      integer,
+    height:     integer
 }
