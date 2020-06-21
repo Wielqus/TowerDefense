@@ -37,7 +37,7 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     update(time?, delta?) {
         if (this.path[0]) {
             const distance = Phaser.Math.Distance.Between(this.x, this.y, this.path[0].pixelX, this.path[0].pixelY);
-            if (distance < 100) {
+            if (distance < 50) {
                 this.move()
             }
 
