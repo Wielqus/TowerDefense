@@ -1,4 +1,5 @@
-import IMonster from '../Interfaces/IMonster'
+import IMonster from '../Interfaces/IMonster';
+
 
 export default class Monster extends Phaser.Physics.Arcade.Sprite {
     scene: Phaser.Scene
@@ -23,12 +24,39 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
 
     create() {
         this.move()
+        this.createAnimations()
+    }
+
+    createAnimations(){
+        this.monsterData.animations.forEach(animation => {
+            this.scene.anims.create({
+                key: animation.key,
+                frames: this.scene.anims.generateFrameNumbers(this.monsterData.name, { start: animation.startFrame, end: animation.endFrame }),
+                duration: this.monsterData.speed * 5,
+                repeat: 5
+            })
+        })
     }
 
     move() {
         let nextPoint = this.path.shift()
         if (nextPoint) {
             this.scene.physics.moveTo(this, nextPoint.pixelX, nextPoint.pixelY, this.monsterData.speed);
+            const xDiffrence = this.x - nextPoint.pixelX
+            const yDiffrence = this.y - nextPoint.pixelY
+            if(Math.abs(xDiffrence) > Math.abs(yDiffrence)){
+                if(xDiffrence > 0){
+                    this.anims.play("left")
+                }else{
+                    this.anims.play("right")
+                }
+            }else{
+                if(yDiffrence < 0){
+                    this.anims.play("down")
+                }else{
+                    this.anims.play("up")
+                }
+            }
         }else{
             this.destroy()
         }
