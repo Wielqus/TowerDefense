@@ -45,7 +45,6 @@ export default class MainScene extends Phaser.Scene {
 
     setInterval(() => {
       let path = this.map.getRandomPath()
-      console.log(path)
       new Monster(this, path)
     }, 500)
     

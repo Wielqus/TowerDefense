@@ -52,7 +52,7 @@ export default class Debug{
             if(tool.key){
                 let key = this.scene.input.keyboard.addKey(tool.key);
                 if(Phaser.Input.Keyboard.JustDown(key)){
-                    if(tool.on){
+                    if(!tool.on){
                         tool.actionOn()
                     }else{
                         tool.actionOff()

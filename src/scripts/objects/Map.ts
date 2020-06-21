@@ -109,7 +109,6 @@ export default class Map {
   debugOn(){
     this.drawPaths()
     this.overlayFields()
-    
   }
 
   debugOff(){
@@ -118,18 +117,18 @@ export default class Map {
 
   overlayFields(){
     this.map.forEachTile(tile => {
+      let rect = new Phaser.Geom.Rectangle(tile.pixelX, tile.pixelY, tile.width, tile.height)
+      this.graphics.lineStyle(1, 0x00000, 0.5)
+      this.graphics.strokeRectShape(rect);
       if(tile.properties.start){
-        let rect = new Phaser.Geom.Rectangle(tile.pixelX, tile.pixelY, tile.width, tile.height)
         this.graphics.fillStyle(0x00FF00, 0.3)
         this.graphics.fillRectShape(rect);
       }
       else if(tile.properties.path){
-        let rect = new Phaser.Geom.Rectangle(tile.pixelX, tile.pixelY, tile.width, tile.height)
         this.graphics.fillStyle(0xFFFF00, 0.3)
         this.graphics.fillRectShape(rect);
       }
       else if(tile.properties.meta){
-        let rect = new Phaser.Geom.Rectangle(tile.pixelX, tile.pixelY, tile.width, tile.height)
         this.graphics.fillStyle(0xFF0000, 0.3)
         this.graphics.fillRectShape(rect);
       }
