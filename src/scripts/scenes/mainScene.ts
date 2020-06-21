@@ -12,7 +12,7 @@ export default class MainScene extends Phaser.Scene {
 
   constructor() {
     super({ key: 'MainScene' })
-    this.map = new Map(this, maps[0])
+    this.map = new Map(this, maps[1])
     this.debug = new Debug(this)
   }
 
@@ -42,7 +42,7 @@ export default class MainScene extends Phaser.Scene {
       speed: 0.5
     };
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
-
+    
     setInterval(() => {
       let path = this.map.getRandomPath()
       new Monster(this, path)
