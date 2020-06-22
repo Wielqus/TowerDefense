@@ -1,9 +1,12 @@
 import FpsText from '../objects/fpsText'
 import Map from '../objects/Map'
 import Monster from '../objects/Monster'
+import Tower from '../objects/Tower'
 import Debug from '../objects/Debug'
 import { maps } from '../../collections/Maps';
 import {monsters} from '../../collections/Monsters'
+import {towers} from '../../collections/Towers'
+
 
 export default class MainScene extends Phaser.Scene {
   fpsText: Phaser.GameObjects.Text
@@ -25,7 +28,9 @@ export default class MainScene extends Phaser.Scene {
         frameHeight: monster.height
       })
     }
-
+    for (let tower of Object.keys(towers)){
+      this.load.image(towers[tower].name, `./assets/towers/${towers[tower].source}`)
+    }
   }
 
   create() {
@@ -34,6 +39,7 @@ export default class MainScene extends Phaser.Scene {
     this.debug.add(`Phaser v${Phaser.VERSION}`)
     this.debug.add(`fps: ${Math.floor(this.game.loop.actualFps)}`)
     this.debug.add("Map debug", "m", () => this.map.debugOn(), () => this.map.debugOff())
+    this.debug.add(`x: y: `)
     // Camera movement settings
     const controlConfig = {
       camera: this.cameras.main,
@@ -57,5 +63,10 @@ export default class MainScene extends Phaser.Scene {
     this.controls.update(50); //Update camera
     this.map.update()
     this.debug.update()
+    if (this.input.activePointer.isDown){
+      this.debug.set(3, `x: ${this.input.x} y: ${this.input.y}`)
+      new Tower(this, this.input.x, this.input.y, towers.base_tower) //factory
+    }
+    
   }
 }
