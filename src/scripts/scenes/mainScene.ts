@@ -4,6 +4,7 @@ import Monster from '../objects/Monster'
 import Debug from '../objects/Debug'
 import { maps } from '../../collections/Maps';
 import {monsters} from '../../collections/Monsters'
+import { Grid } from 'matter';
 
 export default class MainScene extends Phaser.Scene {
   fpsText: Phaser.GameObjects.Text
@@ -24,7 +25,11 @@ export default class MainScene extends Phaser.Scene {
         frameWidth: monster.width,
         frameHeight: monster.height
       })
+
+      this.load.image(`${monster.name}-image`, `./assets/monsters/one-${monster.source}`)
     }
+
+    
 
   }
 
@@ -43,13 +48,18 @@ export default class MainScene extends Phaser.Scene {
       down: this.input.keyboard.addKey('S'),
       speed: 0.5
     };
+
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
     
-    setInterval(() => {
-      let path = this.map.getRandomPath()
-      new Monster(this, path, monsters.skeleton)
-    }, 1000)
+    const buttons =  this.add.group()
     
+
+    
+    const helloButton = this.add.image(0, 0, 'Skeleton-image').setInteractive().on('pointerdown', () => {
+       new Monster(this, this.map.getRandomPath(), monsters.skeleton) 
+      });
+      var g1 = this.add.grid(100, 100, 32, 32, 32, 32, 0x057605);
+  
   }
 
   update(time, delta) {
