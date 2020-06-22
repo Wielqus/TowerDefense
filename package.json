@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "easystarjs": "^0.4.3",
-    "phaser": "^3.23.0"
+    "phaser": "^3.23.0",
+    "phaser3-rex-plugins": "^1.1.19"
   }
 }

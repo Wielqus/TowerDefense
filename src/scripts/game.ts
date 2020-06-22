@@ -1,4 +1,5 @@
 import 'phaser'
+import GridTablePlugin from 'phaser3-rex-plugins/plugins/gridtable-plugin.js';
 import MainScene from './scenes/mainScene'
 import PreloadScene from './scenes/preloadScene'
 
@@ -14,6 +15,13 @@ const config: Phaser.Types.Core.GameConfig = {
     autoCenter: Phaser.Scale.CENTER_BOTH,
     width: DEFAULT_WIDTH,
     height: DEFAULT_HEIGHT
+  },
+  plugins: {
+    global: [{
+        key: 'rexGridTablePlugin',
+        plugin: GridTablePlugin,
+        start: true
+    }]
   },
   scene: [PreloadScene, MainScene],
   physics: {
