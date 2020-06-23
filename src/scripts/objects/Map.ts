@@ -165,7 +165,10 @@ export default class Map {
 
     })
   }
+  get_tile(x:integer, y:integer){
+    return this.map.getTileAtWorldXY(x, y).visible
 
+  }
   update() {
 
   }

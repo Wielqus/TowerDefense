@@ -40,6 +40,7 @@ export default class MainScene extends Phaser.Scene {
     this.debug.add(`fps: ${Math.floor(this.game.loop.actualFps)}`)
     this.debug.add("Map debug", "m", () => this.map.debugOn(), () => this.map.debugOff())
     this.debug.add(`x: y: `)
+    
     // Camera movement settings
     const controlConfig = {
       camera: this.cameras.main,
@@ -65,7 +66,8 @@ export default class MainScene extends Phaser.Scene {
     this.debug.update()
     if (this.input.activePointer.isDown){
       this.debug.set(3, `x: ${this.input.x} y: ${this.input.y}`)
-      new Tower(this, this.input.x, this.input.y, towers.base_tower) //factory
+      // new Tower(this, this.input.x, this.input.y, towers.base_tower) //factory
+      console.log(this.map.get_tile(this.input.x, this.input.y), 'the tile')
     }
     
   }
