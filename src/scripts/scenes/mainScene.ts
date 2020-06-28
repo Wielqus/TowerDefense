@@ -1,10 +1,9 @@
-import FpsText from '../objects/fpsText'
 import Map from '../objects/Map'
 import Monster from '../objects/Monster'
 import Debug from '../objects/Debug'
 import { maps } from '../../collections/Maps';
 import {monsters} from '../../collections/Monsters'
-import { Grid } from 'matter';
+import MonstersList from '../objects/MonstersList';
 
 export default class MainScene extends Phaser.Scene {
   fpsText: Phaser.GameObjects.Text
@@ -28,9 +27,7 @@ export default class MainScene extends Phaser.Scene {
 
       this.load.image(`${monster.name}-image`, `./assets/monsters/one-${monster.source}`)
     }
-
     
-
   }
 
   create() {
@@ -50,17 +47,13 @@ export default class MainScene extends Phaser.Scene {
     };
 
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
-    
-    const buttons =  this.add.group()
-    
 
-    
-    const helloButton = this.add.image(0, 0, 'Skeleton-image').setInteractive().on('pointerdown', () => {
-       new Monster(this, this.map.getRandomPath(), monsters.skeleton) 
-      });
-      var g1 = this.add.grid(100, 100, 32, 32, 32, 32, 0x057605);
+    new MonstersList(this, 200, 200).on("monsterClick", (monster) => {
+      new Monster(this, this.map.getRandomPath(), monster);
+    });
+
+    }
   
-  }
 
   update(time, delta) {
     this.debug.set(1, `fps: ${Math.floor(this.game.loop.actualFps)}`)
