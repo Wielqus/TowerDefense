@@ -1,4 +1,5 @@
 import IMonster from '../Interfaces/IMonster';
+import { monsters } from '../../collections/Monsters';
 
 
 export default class Monster extends Phaser.Physics.Arcade.Sprite {
@@ -30,7 +31,7 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     createAnimations(){
         this.monsterData.animations.forEach(animation => {
             this.scene.anims.create({
-                key: animation.key,
+                key: `${this.monsterData.name}-${animation.key}`,
                 frames: this.scene.anims.generateFrameNumbers(this.monsterData.name, { start: animation.startFrame, end: animation.endFrame }),
                 duration: this.monsterData.speed * 5,
                 repeat: 5
@@ -46,15 +47,15 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
             const yDiffrence = this.y - nextPoint.pixelY
             if(Math.abs(xDiffrence) > Math.abs(yDiffrence)){
                 if(xDiffrence > 0){
-                    this.anims.play("left")
+                    this.anims.play(`${this.monsterData.name}-left`)
                 }else{
-                    this.anims.play("right")
+                    this.anims.play(`${this.monsterData.name}-right`)
                 }
             }else{
                 if(yDiffrence < 0){
-                    this.anims.play("down")
+                    this.anims.play(`${this.monsterData.name}-down`)
                 }else{
-                    this.anims.play("up")
+                    this.anims.play(`${this.monsterData.name}-up`)
                 }
             }
         }else{
@@ -62,7 +63,7 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
-    update(time?, delta?) {
+    update() {
         if (this.path[0]) {
             const distance = Phaser.Math.Distance.Between(this.x, this.y, this.path[0].pixelX, this.path[0].pixelY);
             if (distance < 50) {
