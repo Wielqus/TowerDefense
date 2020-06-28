@@ -24,8 +24,6 @@ export default class MainScene extends Phaser.Scene {
         frameWidth: monster.width,
         frameHeight: monster.height
       })
-
-      this.load.image(`${monster.name}-image`, `./assets/monsters/one-${monster.source}`)
     }
     
   }
