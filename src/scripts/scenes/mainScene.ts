@@ -4,13 +4,14 @@ import Debug from '../objects/Debug'
 import { maps } from '../../collections/Maps';
 import {monsters} from '../../collections/Monsters'
 import MonstersList from '../objects/MonstersList';
+import IMonster from '../Interfaces/IMonster';
+import WaveCreator from '../objects/WaveCreator';
 
 export default class MainScene extends Phaser.Scene {
   fpsText: Phaser.GameObjects.Text
   controls: Phaser.Cameras.Controls.FixedKeyControl
   map: Map
   debug: Debug
-  monstersList: MonstersList
 
   constructor() {
     super({ key: 'MainScene' })
@@ -46,10 +47,8 @@ export default class MainScene extends Phaser.Scene {
     };
 
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
-
-    this.monstersList = new MonstersList(this, 1450, 600).on("monsterClick", (monster) => {
-      new Monster(this, this.map.getRandomPath(), monster);
-    });
+    new WaveCreator(this, this.map, 1450, 600)
+    
 
     }
   
@@ -60,7 +59,7 @@ export default class MainScene extends Phaser.Scene {
 
     this.map.update()
     this.debug.update()
-    this.monstersList.setPosition(this.cameras.cameras[0].displayWidth + this.cameras.cameras[0].scrollX - this.monstersList.width, this.cameras.cameras[0].displayHeight + this.cameras.cameras[0].scrollY - this.monstersList.height)
+    this.debug.setPosition(this.cameras.cameras[0].scrollX, this.cameras.cameras[0].scrollY)
 
   }
 }

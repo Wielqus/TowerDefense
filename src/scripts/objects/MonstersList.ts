@@ -3,7 +3,6 @@ import MonsterButton from './MonsterButton';
 import { GridSizer } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
 import RoundRectangle from 'phaser3-rex-plugins/plugins/roundrectangle.js';
 
-
 export default class MonstersList extends GridSizer {
     [x: string]: any;
     scene: Phaser.Scene
