@@ -10,6 +10,7 @@ export default class MainScene extends Phaser.Scene {
   controls: Phaser.Cameras.Controls.FixedKeyControl
   map: Map
   debug: Debug
+  monstersList: MonstersList
 
   constructor() {
     super({ key: 'MainScene' })
@@ -41,12 +42,12 @@ export default class MainScene extends Phaser.Scene {
       right: this.input.keyboard.addKey('D'),
       up: this.input.keyboard.addKey('W'),
       down: this.input.keyboard.addKey('S'),
-      speed: 0.5
+      speed: 0.5,
     };
 
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
 
-    new MonstersList(this, 200, 200).on("monsterClick", (monster) => {
+    this.monstersList = new MonstersList(this, 1450, 600).on("monsterClick", (monster) => {
       new Monster(this, this.map.getRandomPath(), monster);
     });
 
@@ -56,7 +57,10 @@ export default class MainScene extends Phaser.Scene {
   update(time, delta) {
     this.debug.set(1, `fps: ${Math.floor(this.game.loop.actualFps)}`)
     this.controls.update(50); //Update camera
+
     this.map.update()
     this.debug.update()
+    this.monstersList.setPosition(this.cameras.cameras[0].displayWidth + this.cameras.cameras[0].scrollX - this.monstersList.width, this.cameras.cameras[0].displayHeight + this.cameras.cameras[0].scrollY - this.monstersList.height)
+
   }
 }

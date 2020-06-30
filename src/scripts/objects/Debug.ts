@@ -39,11 +39,10 @@ export default class Debug{
         return this.debugToolsList.map(element => {
             return `${element.description} ${element.key ? "- "+element.key : ""}`
         }).join("\n")
+    }
 
-
-
-
-
+    setPosition(x, y){
+        this.text.setPosition(x, y)
     }
 
     update(){
