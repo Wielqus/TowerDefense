@@ -5,6 +5,7 @@ import Map from './Map';
 import MonstersList from './MonstersList';
 import { GridSizer } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
 import RoundRectangle from 'phaser3-rex-plugins/plugins/roundrectangle.js';
+import { ResolvePlugin } from 'webpack';
 
 export default class WaveCreator extends GridSizer {
     [x: string]: any;
@@ -15,7 +16,7 @@ export default class WaveCreator extends GridSizer {
     constructor(scene: Phaser.Scene, map: Map, x: number, y: number) {
         super(scene, x, y, {
             column: 1,
-            row: 2,
+            row: 3,
             space: {
                 left: 5, right: 5, top: 5, bottom: 5,
                 column: 10,
@@ -35,17 +36,35 @@ export default class WaveCreator extends GridSizer {
 
         const monstersList = new MonstersList(this.scene, 0, 0).on("monsterClick", (monster) => {
             this.monsters.push(monster);
+            this.updateText()
         });
         this.add(monstersList)
+
         const startText = this.scene.add.text(0, 0, "start").setInteractive().on('pointerdown', () => {
+            this.shuffle()
             this.start()
+            monstersList.resetNumber()
         })
         this.add(startText)
+
         this.layout();
+        
+    }
+
+    shuffle(){
+        for (let i = this.monsters.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.monsters[i], this.monsters[j]] = [this.monsters[j], this.monsters[i]];
+        }
+    }
+
+    updateText(){
+        
     }
 
     update() {
-
+        const camera = this.scene.cameras.cameras[0]
+        this.setPosition(camera.displayWidth + camera.scrollX - this.width, camera.displayHeight + camera.scrollY - this.height)
     }
 
     push(monster: IMonster) {
@@ -53,8 +72,14 @@ export default class WaveCreator extends GridSizer {
     }
 
     start() {
-        this.monsters.forEach(monster => {
-            new Monster(this.scene, this.map.getRandomPath(), monster)
-        })
+        const monster = this.monsters.pop()
+        if(monster){
+            new Promise((resolve) => {
+                setTimeout(() => {new Monster(this.scene, this.map.getRandomPath(), monster); resolve() }, (Math.random() * 300) + 100)
+            }).then(() => {
+                this.start()
+            })
+        }
+        
     }
 }

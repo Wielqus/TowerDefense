@@ -12,6 +12,7 @@ export default class MainScene extends Phaser.Scene {
   controls: Phaser.Cameras.Controls.FixedKeyControl
   map: Map
   debug: Debug
+  waveCreator: WaveCreator
 
   constructor() {
     super({ key: 'MainScene' })
@@ -47,19 +48,16 @@ export default class MainScene extends Phaser.Scene {
     };
 
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
-    new WaveCreator(this, this.map, 1450, 600)
-    
-
+    this.waveCreator = new WaveCreator(this, this.map, this.cameras.cameras[0].displayWidth, this.cameras.cameras[0].displayHeight)
     }
   
 
   update(time, delta) {
     this.debug.set(1, `fps: ${Math.floor(this.game.loop.actualFps)}`)
     this.controls.update(50); //Update camera
-
     this.map.update()
     this.debug.update()
     this.debug.setPosition(this.cameras.cameras[0].scrollX, this.cameras.cameras[0].scrollY)
-
+    this.waveCreator.update()
   }
 }
