@@ -16,8 +16,11 @@ export default class MainScene extends Phaser.Scene {
 
   constructor() {
     super({ key: 'MainScene' })
-    this.map = new Map(this, maps[1])
     this.debug = new Debug(this)
+  }
+
+  init(data){
+    this.map = new Map(this, data.map)
   }
 
   preload() {
