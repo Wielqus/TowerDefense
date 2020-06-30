@@ -1,29 +1,37 @@
-import FpsText from '../objects/fpsText'
 import Map from '../objects/Map'
 import Monster from '../objects/Monster'
 import Debug from '../objects/Debug'
 import { maps } from '../../collections/Maps';
+import {monsters} from '../../collections/Monsters'
+import MonstersList from '../objects/MonstersList';
+import IMonster from '../Interfaces/IMonster';
+import WaveCreator from '../objects/WaveCreator';
 
 export default class MainScene extends Phaser.Scene {
   fpsText: Phaser.GameObjects.Text
   controls: Phaser.Cameras.Controls.FixedKeyControl
   map: Map
   debug: Debug
+  waveCreator: WaveCreator
 
   constructor() {
     super({ key: 'MainScene' })
-    this.map = new Map(this, maps[0])
     this.debug = new Debug(this)
+  }
+
+  init(data){
+    this.map = new Map(this, data.map)
   }
 
   preload() {
     this.map.preload()
-    Monster.getSprites().forEach(sprite => {
-      this.load.spritesheet(sprite.name, sprite.source, {
-        frameWidth: 32,
-        frameHeight: 48
+    for (let [key, monster] of Object.entries(monsters)) {
+      this.load.spritesheet(monster.name, `./assets/monsters/${monster.source}`, {
+        frameWidth: monster.width,
+        frameHeight: monster.height
       })
-    })
+    }
+    
   }
 
   create() {
@@ -39,22 +47,20 @@ export default class MainScene extends Phaser.Scene {
       right: this.input.keyboard.addKey('D'),
       up: this.input.keyboard.addKey('W'),
       down: this.input.keyboard.addKey('S'),
-      speed: 0.5
+      speed: 0.5,
     };
-    this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
 
-    setInterval(() => {
-      let path = this.map.getRandomPath()
-      console.log(path)
-      new Monster(this, path)
-    }, 500)
-    
-  }
+    this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
+    this.waveCreator = new WaveCreator(this, this.map, this.cameras.cameras[0].displayWidth, this.cameras.cameras[0].displayHeight)
+    }
+  
 
   update(time, delta) {
     this.debug.set(1, `fps: ${Math.floor(this.game.loop.actualFps)}`)
     this.controls.update(50); //Update camera
     this.map.update()
     this.debug.update()
+    this.debug.setPosition(this.cameras.cameras[0].scrollX, this.cameras.cameras[0].scrollY)
+    this.waveCreator.update()
   }
 }

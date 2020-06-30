@@ -39,11 +39,10 @@ export default class Debug{
         return this.debugToolsList.map(element => {
             return `${element.description} ${element.key ? "- "+element.key : ""}`
         }).join("\n")
+    }
 
-
-
-
-
+    setPosition(x, y){
+        this.text.setPosition(x, y)
     }
 
     update(){
@@ -52,7 +51,7 @@ export default class Debug{
             if(tool.key){
                 let key = this.scene.input.keyboard.addKey(tool.key);
                 if(Phaser.Input.Keyboard.JustDown(key)){
-                    if(tool.on){
+                    if(!tool.on){
                         tool.actionOn()
                     }else{
                         tool.actionOff()

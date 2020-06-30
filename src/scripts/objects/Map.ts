@@ -34,8 +34,10 @@ export default class Map {
     })
 
     this.mapData.layers.forEach(layer => {
-      this.map.createStaticLayer(layer.name, tileSets, 0, 0)
+      let newLayer = this.map.createStaticLayer(layer.name, tileSets)
     })
+
+    this.map.setLayer("Top")
 
     this.scene.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     this.graphics = this.scene.add.graphics();
@@ -54,30 +56,34 @@ export default class Map {
       for (let x: number = 0; x < this.map.width; x++) {
         // In each cell we store the ID of the tile, which corresponds
         // to its index in the tileset of the map ("ID" field in Tiled)
-        col.push(this.map.getTileAt(x, y).index);
+        col.push(this.map.getTileAt(x, y, true).index);
       }
       grid.push(col);
     }
 
     this.pathFinder.setGrid(grid)
+      this.map.forEachTile(tile => {
+        if (tile.properties.path || tile.properties.start || tile.properties.meta) {
+          acceptableTiles.push(tile.index)
+        }
+        if (tile.properties.start) {
+          startTiles.push({
+            x: tile.x,
+            y: tile.y
+          })
+        }
+        if (tile.properties.meta) {
+          finishTiles.push({
+            x: tile.x,
+            y: tile.y
+          })
+        }
+      })
+      
 
-    this.map.forEachTile(tile => {
-      if (tile.properties.path || tile.properties.start || tile.properties.meta) {
-        acceptableTiles.push(tile.index)
-      }
-      if (tile.properties.start) {
-        startTiles.push({
-          x: tile.x,
-          y: tile.y
-        })
-      }
-      if (tile.properties.meta) {
-        finishTiles.push({
-          x: tile.x,
-          y: tile.y
-        })
-      }
-    })
+    const uniqueArray = acceptableTiles.filter(function(item, pos, self) {
+      return self.indexOf(item) == pos;
+  })
 
     this.pathFinder.setAcceptableTiles(acceptableTiles)
 
@@ -87,6 +93,7 @@ export default class Map {
       finishTiles.forEach((meta, key) => {
         this.pathFinder.findPath(start.x, start.y, meta.x, meta.y, (path) => {
           if (path) {
+            
             if (bestPath.length === 0 || bestPath.length > path.length) {
               bestPath = path
             }
@@ -94,7 +101,8 @@ export default class Map {
         })
         this.pathFinder.calculate()
       })
-      
+
+      this.map.setLayer("Bot")
       this.paths.push(bestPath.map(element => {
         return this.map.getTileAt(element.x, element.y)
       }))
@@ -102,57 +110,59 @@ export default class Map {
     })
   }
 
-  getRandomPath(){
+  getRandomPath() {
     return this.paths[Math.floor(Math.random() * this.paths.length)]
   }
 
-  debugOn(){
+  debugOn() {
     this.drawPaths()
     this.overlayFields()
-    
   }
 
-  debugOff(){
+  debugOff() {
     this.graphics.clear();
   }
 
-  overlayFields(){
-    this.map.forEachTile(tile => {
-      if(tile.properties.start){
+  overlayFields() {
+    this.map.setLayer("Top")
+      this.map.forEachTile(tile => {
         let rect = new Phaser.Geom.Rectangle(tile.pixelX, tile.pixelY, tile.width, tile.height)
-        this.graphics.fillStyle(0x00FF00, 0.3)
-        this.graphics.fillRectShape(rect);
-      }
-      else if(tile.properties.path){
-        let rect = new Phaser.Geom.Rectangle(tile.pixelX, tile.pixelY, tile.width, tile.height)
-        this.graphics.fillStyle(0xFFFF00, 0.3)
-        this.graphics.fillRectShape(rect);
-      }
-      else if(tile.properties.meta){
-        let rect = new Phaser.Geom.Rectangle(tile.pixelX, tile.pixelY, tile.width, tile.height)
-        this.graphics.fillStyle(0xFF0000, 0.3)
-        this.graphics.fillRectShape(rect);
-      }
-    })
+        this.graphics.lineStyle(1, 0x00000, 0.5)
+        this.graphics.strokeRectShape(rect);
+        if (tile.properties.start) {
+          this.graphics.fillStyle(0x00FF00, 0.3)
+          this.graphics.fillRectShape(rect);
+        }
+        else if (tile.properties.path) {
+          this.graphics.fillStyle(0xFFFF00, 0.3)
+          this.graphics.fillRectShape(rect);
+        }
+        else if (tile.properties.meta) {
+          this.graphics.fillStyle(0xFF0000, 0.3)
+          this.graphics.fillRectShape(rect);
+        }
+      })
   }
 
   drawPaths() {
     this.graphics.clear();
     this.paths.forEach(path => {
       let points: Array<integer> = [];
-      path.forEach(tile => {
-        points.push(tile.pixelX + tile.width / 2)
-        points.push(tile.pixelY + tile.height / 2)
+
+      path.forEach((tile, index) => {
+        if (index !== 0) {
+          let x = tile.pixelX + tile.width / 2
+          let y = tile.pixelY + tile.height / 2
+          let lastX = path[index - 1].pixelX + path[index - 1].width / 2
+          let lastY = path[index - 1].pixelY + path[index - 1].height / 2
+          var line = new Phaser.Curves.Line([lastX, lastY, x, y]);
+          this.graphics.lineStyle(2, 0xffffff, 1);
+          line.draw(this.graphics);
+        }
       })
 
-      var curve = new Phaser.Curves.Spline(points);
-      let drawPath = { t: 0, vec: new Phaser.Math.Vector2() };
 
-      curve = new Phaser.Curves.Spline(points);
 
-      this.graphics.lineStyle(2, 0xffffff, 1);
-
-      curve.draw(this.graphics, 64);
     })
   }
 
