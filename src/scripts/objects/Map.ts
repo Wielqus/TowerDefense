@@ -141,6 +141,10 @@ export default class Map {
           this.graphics.fillStyle(0xFF0000, 0.3)
           this.graphics.fillRectShape(rect);
         }
+        else if (tile.properties.towerPlace) {
+          this.graphics.fillStyle(0xEE82EE, 0.3)
+          this.graphics.fillRectShape(rect);
+        }
       })
   }
 
