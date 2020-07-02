@@ -95,19 +95,17 @@ export default class Map {
       finishTiles.forEach((meta, key) => {
         this.pathFinder.findPath(start.x, start.y, meta.x, meta.y, (path) => {
           if (path) {
-            
-            if (bestPath.length === 0 || bestPath.length > path.length) {
-              bestPath = path
-            }
+            this.paths.push(path.map(element => {
+              return this.map.getTileAt(element.x, element.y)
+            }))
+          
           }
         })
         this.pathFinder.calculate()
       })
 
       this.map.setLayer("Bot")
-      this.paths.push(bestPath.map(element => {
-        return this.map.getTileAt(element.x, element.y)
-      }))
+      
 
     })
   }
