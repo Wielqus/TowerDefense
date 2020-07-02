@@ -9,6 +9,7 @@ export default class Map {
   pathFinder
   paths: Array<Array<Phaser.Tilemaps.Tile>>
   graphics
+  placedTurrets:any //?
 
 
   constructor(scene: Phaser.Scene, mapData: IMap) {
@@ -36,12 +37,13 @@ export default class Map {
     this.mapData.layers.forEach(layer => {
       let newLayer = this.map.createStaticLayer(layer.name, tileSets)
     })
-
+    
     this.map.setLayer("Top")
 
     this.scene.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     this.graphics = this.scene.add.graphics();
     this.findPath(tileSets)
+    this.map.setLayer("Top")
   }
 
   findPath(tileSets) {
@@ -165,7 +167,17 @@ export default class Map {
 
     })
   }
-
+  getTile(x:integer, y:integer){
+    try {
+      let tile = this.map.getTileAtWorldXY(x, y)
+      if(tile.index == 935){ //in placable_tiles w domyśle
+        return tile
+      }
+    } catch (Typeerror) {
+      return false
+    }
+  
+  }
   update() {
 
   }
