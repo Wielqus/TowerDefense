@@ -170,7 +170,7 @@ export default class Map {
   getTile(x:integer, y:integer){
     try {
       let tile = this.map.getTileAtWorldXY(x, y)
-      if(tile.index == 935){ //in placable_tiles w domyśle
+      if(tile.properties.towerPlace){ //in placable_tiles w domyśle
         return tile
       }
     } catch (Typeerror) {
