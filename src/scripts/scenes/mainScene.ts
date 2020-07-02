@@ -11,9 +11,10 @@ import {towers} from '../../collections/Towers'
 export default class MainScene extends Phaser.Scene {
   fpsText: Phaser.GameObjects.Text
   controls: Phaser.Cameras.Controls.FixedKeyControl
+  monsters: Phaser.GameObjects.Group
+  towers: Array<Tower>
   map: Map
   debug: Debug
-
   constructor() {
     super({ key: 'MainScene' })
     this.map = new Map(this, maps[1])
@@ -30,6 +31,7 @@ export default class MainScene extends Phaser.Scene {
     }
     for (let tower of Object.keys(towers)){
       this.load.image(towers[tower].name, `./assets/towers/${towers[tower].source}`)
+      
     }
   }
 
@@ -40,7 +42,10 @@ export default class MainScene extends Phaser.Scene {
     this.debug.add(`fps: ${Math.floor(this.game.loop.actualFps)}`)
     this.debug.add("Map debug", "m", () => this.map.debugOn(), () => this.map.debugOff())
     this.debug.add(`x: y: `)
-    
+    this.monsters = this.add.group();
+    this.towers = []
+    // this.physics.add.collider(this.monsters, this.towers)
+
     // Camera movement settings
     const controlConfig = {
       camera: this.cameras.main,
@@ -52,23 +57,34 @@ export default class MainScene extends Phaser.Scene {
     };
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
     
-    setInterval(() => {
+    // setInterval(() => {
       let path = this.map.getRandomPath()
-      new Monster(this, path, monsters.skeleton)
-    }, 1000)
-    
-  }
+      this.monsters.add(new Monster(this, path, monsters.skeleton))
+      
+     
+    // }, 1000)
+    this.input.on('pointerdown', () => {
+      this.debug.set(3, `x: ${this.input.x} y: ${this.input.y}`)
+      let [x, y] = this.map.get_tile(this.input.x, this.input.y)
+      
+      this.towers.push(new Tower(this, x, y, towers.base_tower))
+      
 
+      
+
+    })
+  
+  }
+  
   update(time, delta) {
     this.debug.set(1, `fps: ${Math.floor(this.game.loop.actualFps)}`)
     this.controls.update(50); //Update camera
     this.map.update()
     this.debug.update()
-    if (this.input.activePointer.isDown){
-      this.debug.set(3, `x: ${this.input.x} y: ${this.input.y}`)
-      // new Tower(this, this.input.x, this.input.y, towers.base_tower) //factory
-      console.log(this.map.get_tile(this.input.x, this.input.y), 'the tile')
-    }
+    if (this.towers.length > 0 )
+    this.towers.forEach(tower => {
+      tower.enemies_nearby(this.monsters.getChildren())
+    })
     
   }
 }
