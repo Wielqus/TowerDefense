@@ -8,6 +8,8 @@ import MonstersList from '../objects/MonstersList';
 import IMonster from '../Interfaces/IMonster';
 import WaveCreator from '../objects/WaveCreator';
 import {towers} from '../../collections/Towers'
+import TowerBuilder from '../objects/TowerBuilder'
+import TowerButton from '../objects/TowerButton';
 
 
 export default class MainScene extends Phaser.Scene {
@@ -18,6 +20,7 @@ export default class MainScene extends Phaser.Scene {
   map: Map
   debug: Debug
   waveCreator: WaveCreator
+  towerBuilder: TowerBuilder
 
   constructor() {
     super({ key: 'MainScene' })
@@ -64,19 +67,20 @@ export default class MainScene extends Phaser.Scene {
 
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
     this.waveCreator = new WaveCreator(this, this.map, this.cameras.cameras[0].displayWidth, this.cameras.cameras[0].displayHeight)
-    
+    this.towerBuilder = new TowerBuilder(this, this.scale.width * 0 + 33, this.scale.height * 0.8)
+
     this.input.on('pointerdown', () => {
       
       this.debug.set(3, `x: ${this.input.x} y: ${this.input.y}`)
-      let tile = this.map.getTile(this.input.x, this.input.y)
-      
-      if(tile){
-        this.towers.push(new Tower(this, tile.pixelX, tile.pixelY, towers.base_tower))
-        console.log(this.towers)
+      if(this.towerBuilder.currentTowerBtn && this.towerBuilder.currentTowerBtn instanceof TowerButton){
+        let tile = this.map.getTile(this.input.x, this.input.y)
+        if(tile){
+          let towerData = this.towerBuilder.currentTowerBtn.towerData
+          this.towers.push(new Tower(this, tile.pixelX, tile.pixelY, towerData))
+        }
       }
     })  
-  
-  }
+ }
 
   update(time, delta) {
     this.debug.set(1, `fps: ${Math.floor(this.game.loop.actualFps)}`)
