@@ -74,7 +74,7 @@ export default class MainScene extends Phaser.Scene {
     this.input.on('pointerdown', () => {
       this.debug.set(3, `x: ${this.input.x} y: ${this.input.y}`)
       if(this.towersList.currentTowerBtn && this.towersList.currentTowerBtn instanceof TowerButton){
-        let tile = this.map.getTile(this.input.x, this.input.y)
+        let tile = this.map.getTile(this.input.x + this.cameras.cameras[0].scrollX, this.input.y + this.cameras.cameras[0].scrollY)
         if(tile){
           let towerData = this.towersList.currentTowerBtn.towerData
           this.towers.push(new Tower(this, tile.pixelX, tile.pixelY, towerData))
