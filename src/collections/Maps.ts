@@ -1,7 +1,7 @@
 export let maps = [
     {
-        "name":     "Test map",
-        "jsonFile": "./assets/maps/map.json",
+        "name":     "Test map 2",
+        "jsonFile": "./assets/maps/Map1.json",
         "tileSets":  [
             {
                 "name":     "terrain_atlas",
@@ -10,13 +10,19 @@ export let maps = [
         ],
         "layers": [
             {
-                "name": "bot",
+                "name": "Bot",
+            },
+            {
+                "name": "Top",
+            },
+            {
+                "name": "Objects",
             }
         ]
     },
     {
-        "name":     "Test map 2",
-        "jsonFile": "./assets/maps/Map1.json",
+        "name":     "Kreta",
+        "jsonFile": "./assets/maps/Kreta3.json",
         "tileSets":  [
             {
                 "name":     "terrain_atlas",

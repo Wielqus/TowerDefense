@@ -95,19 +95,17 @@ export default class Map {
       finishTiles.forEach((meta, key) => {
         this.pathFinder.findPath(start.x, start.y, meta.x, meta.y, (path) => {
           if (path) {
-            
-            if (bestPath.length === 0 || bestPath.length > path.length) {
-              bestPath = path
-            }
+            this.paths.push(path.map(element => {
+              return this.map.getTileAt(element.x, element.y)
+            }))
+          
           }
         })
         this.pathFinder.calculate()
       })
 
       this.map.setLayer("Bot")
-      this.paths.push(bestPath.map(element => {
-        return this.map.getTileAt(element.x, element.y)
-      }))
+      
 
     })
   }
@@ -143,6 +141,10 @@ export default class Map {
           this.graphics.fillStyle(0xFF0000, 0.3)
           this.graphics.fillRectShape(rect);
         }
+        else if (tile.properties.towerPlace) {
+          this.graphics.fillStyle(0xEE82EE, 0.3)
+          this.graphics.fillRectShape(rect);
+        }
       })
   }
 
@@ -170,7 +172,7 @@ export default class Map {
   getTile(x:integer, y:integer){
     try {
       let tile = this.map.getTileAtWorldXY(x, y)
-      if(tile.index == 935){ //in placable_tiles w domyśle
+      if(tile.properties.towerPlace){ //in placable_tiles w domyśle
         return tile
       }
     } catch (Typeerror) {
