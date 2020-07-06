@@ -75,7 +75,8 @@ export default class MainScene extends Phaser.Scene {
       this.debug.set(3, `x: ${this.input.x} y: ${this.input.y}`)
       if(this.towersList.currentTowerBtn && this.towersList.currentTowerBtn instanceof TowerButton){
         let tile = this.map.getTile(this.input.x + this.cameras.cameras[0].scrollX, this.input.y + this.cameras.cameras[0].scrollY)
-        if(tile){
+        let [UI_X, UI_Y] = this.towersList.get_area()
+        if(tile && Phaser.Math.Distance.Between(tile.pixelX, tile.pixelY, UI_X, UI_Y) > this.towersList.height){ // drugi warunek dopoki nie bedzie tiles.UI
           let towerData = this.towersList.currentTowerBtn.towerData
           this.towers.push(new Tower(this, tile.pixelX, tile.pixelY, towerData))
           this.towersList.currentTowerBtn.deactivate()

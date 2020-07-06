@@ -49,5 +49,9 @@ export default class TowerLists extends CollectionsList {
         this.setPosition(camera.displayWidth + camera.scrollX - (this.width *1.5), camera.displayHeight + camera.scrollY - (this.height*1.5))
     }
 
+    get_area(){
+        return [this._x, this._y]
+    }
+
 
 }
