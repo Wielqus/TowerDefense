@@ -1,14 +1,15 @@
 import ITower from "../Interfaces/ITower"
-import TowerBuilder from "./TowerBuilder"
+import TowerBuilder from "./TowerLists"
+import TowerLists from "./TowerLists"
 
 export default class TowerButton extends Phaser.GameObjects.Image{
     scene: Phaser.Scene
     towerData: ITower
     clicked: boolean
-    parent: TowerBuilder
+    parent: TowerLists
     
     
-    constructor(scene: Phaser.Scene, x: number, y:number, tower: ITower, parent: TowerBuilder){
+    constructor(scene: Phaser.Scene, x: number, y:number, tower: ITower, parent: TowerLists){
         super(scene, x, y, tower.name)
         this.clicked = false
         this.towerData = tower

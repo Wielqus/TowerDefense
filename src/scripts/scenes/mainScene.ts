@@ -8,8 +8,9 @@ import MonstersList from '../objects/MonstersList';
 import IMonster from '../Interfaces/IMonster';
 import WaveCreator from '../objects/WaveCreator';
 import {towers} from '../../collections/Towers'
-import TowerBuilder from '../objects/TowerBuilder'
+import TowerBuilder from '../objects/TowerLists'
 import TowerButton from '../objects/TowerButton';
+import TowerLists from '../objects/TowerLists';
 
 
 export default class MainScene extends Phaser.Scene {
@@ -20,7 +21,8 @@ export default class MainScene extends Phaser.Scene {
   map: Map
   debug: Debug
   waveCreator: WaveCreator
-  towerBuilder: TowerBuilder
+  // towerBuilder: TowerBuilder
+  towersList: TowerLists
 
   constructor() {
     super({ key: 'MainScene' })
@@ -67,16 +69,16 @@ export default class MainScene extends Phaser.Scene {
 
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
     this.waveCreator = new WaveCreator(this, this.map, this.cameras.cameras[0].displayWidth, this.cameras.cameras[0].displayHeight)
-    this.towerBuilder = new TowerBuilder(this, this.scale.width * 0 + 33, this.scale.height * 0.8)
+    this.towersList = new TowerLists(this, this.scale.width * 0 + 33, this.scale.height * 0.8, 1, towers)
 
     this.input.on('pointerdown', () => {
       this.debug.set(3, `x: ${this.input.x} y: ${this.input.y}`)
-      if(this.towerBuilder.currentTowerBtn && this.towerBuilder.currentTowerBtn instanceof TowerButton){
+      if(this.towersList.currentTowerBtn && this.towersList.currentTowerBtn instanceof TowerButton){
         let tile = this.map.getTile(this.input.x, this.input.y)
         if(tile){
-          let towerData = this.towerBuilder.currentTowerBtn.towerData
+          let towerData = this.towersList.currentTowerBtn.towerData
           this.towers.push(new Tower(this, tile.pixelX, tile.pixelY, towerData))
-          this.towerBuilder.currentTowerBtn.deactivate()
+          this.towersList.currentTowerBtn.deactivate()
         }
       }
     })  

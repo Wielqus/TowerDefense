@@ -6,6 +6,7 @@ import MonstersList from './MonstersList';
 import { GridSizer } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
 import RoundRectangle from 'phaser3-rex-plugins/plugins/roundrectangle.js';
 import { ResolvePlugin } from 'webpack';
+import { monsters } from '../../collections/Monsters';
 
 export default class WaveCreator extends GridSizer {
     [x: string]: any;
@@ -36,7 +37,7 @@ export default class WaveCreator extends GridSizer {
         this.scene.add.existing(background)
         this.addBackground(background)
 
-        const monstersList = new MonstersList(this.scene, 0, 0).on("monsterClick", (monster) => {
+        const monstersList = new MonstersList(this.scene, 0, 0, 3, monsters).on("monsterClick", (monster) => {
             this.monsters.push(monster);
             this.updateText()
         });

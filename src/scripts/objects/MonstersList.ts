@@ -1,25 +1,15 @@
 import { monsters } from '../../collections/Monsters';
 import MonsterButton from './MonsterButton';
-import { GridSizer } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
 import RoundRectangle from 'phaser3-rex-plugins/plugins/roundrectangle.js';
+import CollectionsList from './CollectionsList';
 
-export default class MonstersList extends GridSizer {
+export default class MonstersList extends CollectionsList {
     [x: string]: any;
     scene: Phaser.Scene
 
-    constructor(scene, x: number, y: number, columns: number = 3) {
-        super(scene, x, y, {
-            column: columns,
-            row: Math.ceil(Array.from(Object.entries(monsters)).length / columns),
-            space: {
-                     left: 5, right: 5, top: 5, bottom:5,
-                     column: 10,
-                     row: 10     
-                 },
-        }),
-        this.scene = scene
-        scene.add.existing(this)
-        this.create()
+    constructor(scene, x: number, y: number, columns: number = 3, collectionType) {
+       super(scene, x, y, columns, collectionType)
+       this.create()
     }
 
     create() {
