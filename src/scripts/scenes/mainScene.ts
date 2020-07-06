@@ -69,7 +69,7 @@ export default class MainScene extends Phaser.Scene {
 
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
     this.waveCreator = new WaveCreator(this, this.map, this.cameras.cameras[0].displayWidth, this.cameras.cameras[0].displayHeight)
-    this.towersList = new TowerLists(this, this.scale.width * 0 + 33, this.scale.height * 0.8, 1, towers)
+    this.towersList = new TowerLists(this, this.scale.width * 0.9, this.scale.height * 0.6, 1, towers)
 
     this.input.on('pointerdown', () => {
       this.debug.set(3, `x: ${this.input.x} y: ${this.input.y}`)
