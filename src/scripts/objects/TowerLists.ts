@@ -44,4 +44,10 @@ export default class TowerLists extends CollectionsList {
         this.layout();
     }
 
+    update() {
+        const camera = this.scene.cameras.cameras[0]
+        this.setPosition(camera.displayWidth + camera.scrollX - (this.width *1.5), camera.displayHeight + camera.scrollY - (this.height*1.5))
+    }
+
+
 }

@@ -91,6 +91,7 @@ export default class MainScene extends Phaser.Scene {
     this.debug.update()
     this.debug.setPosition(this.cameras.cameras[0].scrollX, this.cameras.cameras[0].scrollY)
     this.waveCreator.update()
+    this.towersList.update()
     
     if (this.towers.length > 0 ){
       this.towers.forEach(tower => {
