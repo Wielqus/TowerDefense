@@ -31,9 +31,9 @@ export default class TowerBuilder extends GridSizer {
         }
         this.currentTowerBtn = icon
     }
-    removeCurrent(icon:TowerButton){
+    removeCurrent(){
         this.currentTowerBtn = {}
-        console.log( this.currentTowerBtn instanceof TowerButton)
+        
     }
 
     create(){

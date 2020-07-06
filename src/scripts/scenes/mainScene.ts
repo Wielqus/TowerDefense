@@ -70,13 +70,13 @@ export default class MainScene extends Phaser.Scene {
     this.towerBuilder = new TowerBuilder(this, this.scale.width * 0 + 33, this.scale.height * 0.8)
 
     this.input.on('pointerdown', () => {
-      
       this.debug.set(3, `x: ${this.input.x} y: ${this.input.y}`)
       if(this.towerBuilder.currentTowerBtn && this.towerBuilder.currentTowerBtn instanceof TowerButton){
         let tile = this.map.getTile(this.input.x, this.input.y)
         if(tile){
           let towerData = this.towerBuilder.currentTowerBtn.towerData
           this.towers.push(new Tower(this, tile.pixelX, tile.pixelY, towerData))
+          this.towerBuilder.currentTowerBtn.deactivate()
         }
       }
     })  

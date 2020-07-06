@@ -16,7 +16,6 @@ export default class TowerButton extends Phaser.GameObjects.Image{
         this.tint = 0xBEBEBE
         this.setInteractive().on('pointerdown', () =>{
             this.isActive() ? this.deactivate(): this.activate()
-            console.log(this.parent.currentTowerBtn)
         })
         return this
     }
@@ -31,7 +30,7 @@ export default class TowerButton extends Phaser.GameObjects.Image{
     }
     deactivate(){
         this.tint = 0xBEBEBE
-        this.parent.removeCurrent(this)
+        this.parent.removeCurrent()
         this.clicked = false
 
     }
