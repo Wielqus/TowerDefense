@@ -8,6 +8,8 @@ import MonstersList from '../objects/MonstersList';
 import IMonster from '../Interfaces/IMonster';
 import WaveCreator from '../objects/WaveCreator';
 import {towers} from '../../collections/Towers'
+import {bullets} from '../../collections/Bullets'
+import IBullet from '../Interfaces/IBullet'
 import TowerBuilder from '../objects/TowerLists'
 import TowerButton from '../objects/TowerButton';
 import TowerLists from '../objects/TowerLists';
@@ -43,7 +45,9 @@ export default class MainScene extends Phaser.Scene {
     }
     for (let tower of Object.keys(towers)){
       this.load.image(towers[tower].name, `./assets/towers/${towers[tower].source}`)
-      
+    }
+    for (let [key, bullet] of Object.entries(bullets)){
+      this.load.image(bullet.name, `./assets/bullets/${bullet.source}`)
     }
   }
 

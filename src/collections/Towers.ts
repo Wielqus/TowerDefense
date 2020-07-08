@@ -1,3 +1,5 @@
+import {bullets} from './Bullets'
+
 export const towers = {
     base_tower:{
         name: "base_tower",
@@ -6,6 +8,7 @@ export const towers = {
         source: "tower_round.png",
         width: 64,
         height: 64,
+        bullet: bullets.blue_bullet,
     },
     square_tower:{
         name: "square_tower",
@@ -14,5 +17,6 @@ export const towers = {
         source: "tower_square.png",
         width: 64,
         height: 64,
-    }
+        bullet: bullets.green_bullet,
+    },
 }

@@ -1,3 +1,5 @@
+import IBullet from './IBullet'
+
 export default interface ITower{
     name: string,
     range: integer,
@@ -5,4 +7,5 @@ export default interface ITower{
     source: string,
     width: integer,
     height: integer,
+    bullet: IBullet,
 }
