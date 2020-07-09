@@ -19,7 +19,8 @@ export default class MainScene extends Phaser.Scene {
   fpsText: Phaser.GameObjects.Text
   controls: Phaser.Cameras.Controls.FixedKeyControl
   monsters: Phaser.GameObjects.Group
-  towers: Array<Tower>
+  bullets: Phaser.GameObjects.Group
+  towers: Phaser.GameObjects.Group
   map: Map
   debug: Debug
   waveCreator: WaveCreator
@@ -58,8 +59,9 @@ export default class MainScene extends Phaser.Scene {
     this.debug.add(`fps: ${Math.floor(this.game.loop.actualFps)}`)
     this.debug.add("Map debug", "m", () => this.map.debugOn(), () => this.map.debugOff())
     this.debug.add(`x: y: `)
-    this.monsters = this.add.group();
-    this.towers = []
+    this.bullets = this.add.group();
+    this.towers = this.add.group();
+    this.towers.classType = Tower
 
     // Camera movement settings
     const controlConfig = {
@@ -82,7 +84,7 @@ export default class MainScene extends Phaser.Scene {
         let [UI_X, UI_Y] = this.towersList.get_area()
         if(tile && Phaser.Math.Distance.Between(tile.pixelX, tile.pixelY, UI_X, UI_Y) > this.towersList.height){ // drugi warunek dopoki nie bedzie tiles.UI
           let towerData = this.towersList.currentTowerBtn.towerData
-          this.towers.push(new Tower(this, tile.pixelX, tile.pixelY, towerData))
+          this.towers.add(new Tower(this, tile.pixelX, tile.pixelY, towerData))
           this.towersList.currentTowerBtn.deactivate()
         }
       }
@@ -98,10 +100,10 @@ export default class MainScene extends Phaser.Scene {
     this.waveCreator.update()
     this.towersList.update()
     
-    if (this.towers.length > 0 ){
-      this.towers.forEach(tower => {
-      tower.enemiesNearby(this.waveCreator.active_monsters)
-    })
+    if (this.towers.getLength() > 0 && this.waveCreator.active_monsters.getLength() > 0){
+      this.towers.getChildren().forEach(tower => {
+        tower.update(time, delta, this.waveCreator.active_monsters, this.bullets)
+      });
     }
     
   }
