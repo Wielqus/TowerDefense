@@ -2,7 +2,7 @@ export const bullets = {
     blue_bullet: {
         name: 'blue_bullet',
         source: 'bullet_blue.png',
-        speed: 500,
+        speed: 600,
         width: 32,
         height: 32,
     },
