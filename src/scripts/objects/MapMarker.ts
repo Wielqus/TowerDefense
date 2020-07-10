@@ -6,6 +6,7 @@ export default class MapMarker extends Phaser.GameObjects.GameObject {
     marker: Phaser.GameObjects.Graphics
     map
     availableTiles: Array<Tilemaps.Tile>
+    actualTiles: Array<Tilemaps.Tile>
 
 
     constructor(scene: Phaser.Scene, map, availableTiles: Array<Tilemaps.Tile> = []) {
@@ -18,7 +19,6 @@ export default class MapMarker extends Phaser.GameObjects.GameObject {
         scene.events.on('update', (time, delta) => {
             this.update(time, delta)
         });
-
     }
 
     destructor() {
@@ -31,6 +31,11 @@ export default class MapMarker extends Phaser.GameObjects.GameObject {
 
     create() {
 
+    }
+
+    onClick() {
+        this.marker.clear()
+        this.setActive(false).destroy()
     }
 
     findTileNeighbors(mainTile: Phaser.Tilemaps.Tile) {
@@ -48,31 +53,38 @@ export default class MapMarker extends Phaser.GameObjects.GameObject {
     }
 
     update(time, delta) {
-        if (this.scene) {
+        if (this) {
             this.marker.clear();
-            const worldPoint = this.scene.input.activePointer.positionToCamera(this.scene.cameras.main);
-            const pointerTile: Tilemaps.Tile = this.map.map.worldToTileXY(worldPoint["x"], worldPoint["y"]);
-            const snappedWorldPoint = this.map.map.tileToWorldXY(pointerTile.x, pointerTile.y);
-            this.marker.setPosition(snappedWorldPoint.x, snappedWorldPoint.y);
-            const tile = this.map.map.getTileAt(pointerTile.x, pointerTile.y)
-            if (tile) {
-                const tiles = this.findTileNeighbors(tile)
-                const found = tiles.every(tile => {
-                    if (tile) {
-                        return tile.properties.towerPlace === true
-                    }
-                    return false
-                })
-                if (found) {
-                    this.marker.fillStyle(0x008000, 0.5)
+            if (this.scene) {
+                const worldPoint = this.scene.input.activePointer.positionToCamera(this.scene.cameras.main);
+                const pointerTile: Tilemaps.Tile = this.map.map.worldToTileXY(worldPoint["x"], worldPoint["y"]);
+                const snappedWorldPoint = this.map.map.tileToWorldXY(pointerTile.x, pointerTile.y);
+                this.marker.setPosition(snappedWorldPoint.x, snappedWorldPoint.y);
+                const tile = this.map.map.getTileAt(pointerTile.x, pointerTile.y)
+                if (tile) {
+                    const tiles = this.findTileNeighbors(tile)
+                    this.actualTiles = tiles
+                    const found = tiles.every(tile => {
+                        if (tile) {
+                            return tile.properties.towerPlace === true
+                        }
+                        return false
+                    })
+                    if (found) {
+                        this.marker.fillStyle(0x008000, 0.5)
 
+                    } else {
+                        this.marker.fillStyle(0xFF0000, 0.5)
+                    }
                 } else {
                     this.marker.fillStyle(0xFF0000, 0.5)
                 }
-            } else {
-                this.marker.fillStyle(0xFF0000, 0.5)
+                this.marker.fillRect(0, 0, 2 * this.map.map.tileWidth, 2 * this.map.map.tileHeight);
+
+                if (this.scene.input.activePointer.isDown) {
+                    this.onClick()
+                }
             }
-            this.marker.fillRect(0, 0, 2 * this.map.map.tileWidth, 2 * this.map.map.tileHeight);
         }
     }
 
