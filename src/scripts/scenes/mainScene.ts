@@ -11,6 +11,7 @@ import {towers} from '../../collections/Towers'
 import TowerBuilder from '../objects/TowerLists'
 import TowerButton from '../objects/TowerButton';
 import TowerLists from '../objects/TowerLists';
+import MapMarker from '../objects/MapMarker';
 
 
 export default class MainScene extends Phaser.Scene {
@@ -82,7 +83,9 @@ export default class MainScene extends Phaser.Scene {
           this.towersList.currentTowerBtn.deactivate()
         }
       }
-    })  
+    })
+    console.log("map marker")
+    new MapMarker(this, this.map, this.map.turretsTiles)
  }
 
   update(time, delta) {
