@@ -63,6 +63,13 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    receiveDamage(damage: integer){
+        this.monsterData.hp -= damage
+        if (this.monsterData.hp < 0){
+            this.destroy()
+        }
+    }
+
     update() {
         if (this.path[0]) {
             const distance = Phaser.Math.Distance.Between(this.x, this.y, this.path[0].pixelX, this.path[0].pixelY);
