@@ -6,6 +6,7 @@ export default interface IMonster {
     damage: integer,
     width: integer,
     height: integer,
+    hp: integer,
     animations: Array<{"key": string,"startFrame": integer,"endFrame": integer}>
         
 }
