@@ -3,7 +3,7 @@ import {bullets} from './Bullets'
 export const towers = {
     base_tower:{
         name: "base_tower",
-        range: 100,
+        range: 120,
         damage: 10,
         source: "tower_round.png",
         width: 64,
@@ -12,7 +12,7 @@ export const towers = {
     },
     square_tower:{
         name: "square_tower",
-        range: 80,
+        range: 100,
         damage: 15,
         source: "tower_square.png",
         width: 64,

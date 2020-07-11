@@ -7,7 +7,6 @@ export const monsters = {
         damage: 30,
         width: 32,
         height: 32,
-        hp: 10,
         animations: [
             {
                 "key": "left",
@@ -39,7 +38,6 @@ export const monsters = {
         damage: 50,
         width: 32,
         height: 32,
-        hp: 15,
         animations: [
             {
                 "key": "left",
@@ -71,7 +69,6 @@ export const monsters = {
         damage: 50,
         width: 32,
         height: 32,
-        hp: 20,
         animations: [
             {
                 "key": "left",

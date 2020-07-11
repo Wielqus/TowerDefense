@@ -64,8 +64,10 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
     }
 
     receiveDamage(damage: integer){
-        this.monsterData.hp -= damage
-        if (this.monsterData.hp < 0){
+        this.monsterData.health -= damage
+        if (this.monsterData.health < 0){
+            this.setActive(false)
+            this.setVisible(false)
             this.destroy()
         }
     }

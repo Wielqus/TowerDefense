@@ -10,6 +10,7 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
     y: number
     rangeCricle: Phaser.GameObjects.Arc
     nextTic: number
+    _currentTarget: Monster
 
     constructor(scene: Phaser.Scene, x:integer, y:integer, towerData: ITower) {
         super(scene, x, y, towerData.name)
@@ -21,23 +22,45 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
         this.activateInteractions()
     }
 
+    currentTarget(target: Monster){
+        this._currentTarget = target
+    }
+
+    getCurrentTarget(){
+        return this._currentTarget
+    }
+    
     drawRange(scene:Phaser.Scene){
        this.rangeCricle =  scene.add.circle(this.x, this.y, this.towerData.range, 0, 0.2)
     }
     
-    enemiesNearby(enemies: Array<any>, bullets:Phaser.GameObjects.Group){
-        enemies.forEach(enemy => {
-            if(enemy.active && Phaser.Math.Distance.Between(enemy.x, enemy.y, this.x, this.y) <= this.towerData.range){
-                this.shot(enemy, bullets)
-            }
-        })
+    activeEnemyInRange(enemy: Monster){
+        return enemy.active && this.countDistance(enemy) <= this.towerData.range
+    }
+
+    countDistance(enemy){
+        return Phaser.Math.Distance.Between(enemy.x, enemy.y, this.x, this.y)
+    }
+
+    enemiesNearby(enemies: Array<any>):Array<Monster>{
+        return enemies.filter((enemy) => this.activeEnemyInRange(enemy))
+    }
+    
+    getClosestTargetWithMostHealth(enemies: Array<Monster>){
+        const mostHealth = Math.max(...enemies.map(enemy => enemy.monsterData.health), 0)
+        const mostHealthEnemies = enemies.filter((enemy) => {return enemy.monsterData.health == mostHealth})
+        if (mostHealthEnemies.length > 1){
+            return mostHealthEnemies.reduce(
+                (prev, current) => (this.countDistance(prev) > this.countDistance(current)? current: prev))
+        }
+        return mostHealthEnemies[0]
     }
     
     shot(enemy:Monster, bullets: Phaser.GameObjects.Group){
         let angle = Phaser.Math.Angle.Between(this.x, this.y, enemy.x, enemy.y)
-        let bullet = new Bullet(this.scene, this.x, this.y, this.towerData)
+        const bullet = new Bullet(this.scene, this.x, this.y, this.towerData)
         bullets.add(bullet)
-        bullet.fire(enemy)
+        bullet.fire(enemy, angle)
     }
     
     activateInteractions(){
@@ -57,7 +80,17 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
 
     update(time, delta, enemies: Phaser.GameObjects.Group, bullets:  Phaser.GameObjects.Group){
         if(time > this.nextTic) {
-            this.enemiesNearby(enemies.getChildren(), bullets)
+            if(enemies.getLength() > 0){
+                const currentTarget = this.getCurrentTarget()
+                if(!currentTarget || !this.activeEnemyInRange(currentTarget)){
+                    const reachableEnemies = this.enemiesNearby(enemies.getChildren())
+                    const candidate = this.getClosestTargetWithMostHealth(reachableEnemies)
+                    this.currentTarget(candidate)
+                }
+                else{
+                    this.shot(currentTarget, bullets)
+                }
+            }
             this.nextTic = time + 500;
         }
     }

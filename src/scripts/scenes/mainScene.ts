@@ -59,7 +59,7 @@ export default class MainScene extends Phaser.Scene {
     this.debug.add(`fps: ${Math.floor(this.game.loop.actualFps)}`)
     this.debug.add("Map debug", "m", () => this.map.debugOn(), () => this.map.debugOff())
     this.debug.add(`x: y: `)
-    this.bullets = this.add.group();
+    this.bullets = this.add.group({runChildUpdate: true});
     this.towers = this.add.group();
     this.towers.classType = Tower
 
