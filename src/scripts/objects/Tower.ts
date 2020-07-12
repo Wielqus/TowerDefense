@@ -1,7 +1,6 @@
 import ITower from '../Interfaces/ITower';
 import Monster from './Monster';
 import Bullet from './Bullet';
-import { bullets } from '../../collections/Bullets';
 
 export default class Tower extends Phaser.Physics.Arcade.Image {
     scene: Phaser.Scene
@@ -58,10 +57,8 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
     }
     
     shot(enemy:Monster, bullets: Phaser.GameObjects.Group){
-        let angle = Phaser.Math.Angle.Between(this.x, this.y, enemy.x, enemy.y)
         const bullet = new Bullet(this.scene, this.x, this.y, this.towerData, enemy)
         bullets.add(bullet)
-        // bullet.fire(enemy, angle)
     }
     
     activateInteractions(){
@@ -72,7 +69,6 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
             }else{
                 this.rangeCricle.setVisible(true)
             }
-
         })
         this.on('pointerout', () =>{
             this.rangeCricle.setVisible(false)
@@ -81,7 +77,6 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
 
     update(time, delta, enemies: Phaser.GameObjects.Group, bullets:  Phaser.GameObjects.Group){
         if(time > this.nextTic) {
-            if(enemies.getLength() > 0){
                 const currentTarget = this.getCurrentTarget()
                 if(!currentTarget || !this.activeEnemyInRange(currentTarget)){
                     const reachableEnemies = this.enemiesNearby(enemies.getChildren())
@@ -91,7 +86,6 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
                 else{
                     this.shot(currentTarget, bullets)
                 }
-            }
             this.nextTic = time + 500;
         }
     }

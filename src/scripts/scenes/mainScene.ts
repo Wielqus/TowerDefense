@@ -24,7 +24,6 @@ export default class MainScene extends Phaser.Scene {
   map: Map
   debug: Debug
   waveCreator: WaveCreator
-  // towerBuilder: TowerBuilder
   towersList: TowerLists
 
   constructor() {
@@ -76,10 +75,6 @@ export default class MainScene extends Phaser.Scene {
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
     this.waveCreator = new WaveCreator(this, this.map, this.cameras.cameras[0].displayWidth, this.cameras.cameras[0].displayHeight)
     this.towersList = new TowerLists(this, this.scale.width * 0.9, this.scale.height * 0.6, 1, towers)
-    this.physics.add.overlap(this.bullets, this.waveCreator.active_monsters, (bullet, monster) => {
-      monster.receiveDamage(bullet.towerData.damage)
-      bullet.destroy()
-    })
 
     this.input.on('pointerdown', () => {
       this.debug.set(3, `x: ${this.input.x} y: ${this.input.y}`)
@@ -103,7 +98,6 @@ export default class MainScene extends Phaser.Scene {
     this.debug.setPosition(this.cameras.cameras[0].scrollX, this.cameras.cameras[0].scrollY)
     this.waveCreator.update()
     this.towersList.update()
-    
     if (this.towers.getLength() > 0 && this.waveCreator.active_monsters.getLength() > 0){
       this.towers.getChildren().forEach(tower => {
         tower.update(time, delta, this.waveCreator.active_monsters, this.bullets)

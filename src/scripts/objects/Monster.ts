@@ -13,7 +13,7 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
         super(scene, path[0].pixelX, path[0].pixelY, monsterData.name)
         this.scene = scene
         this.path = Array.from(path)
-        this.monsterData = monsterData
+        this.monsterData = {...monsterData}
         this.actualPathElement = 0
         this.timeFromLastMove = 0
         this.scene.add.existing(this)
