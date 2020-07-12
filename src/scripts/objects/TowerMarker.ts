@@ -1,11 +1,10 @@
 import { Vector } from "matter"
 import { Tilemaps } from 'phaser';
 
-export default class MapMarker extends Phaser.GameObjects.GameObject {
+export default class TowerMarker extends Phaser.GameObjects.GameObject {
     scene: Phaser.Scene
     marker: Phaser.GameObjects.Graphics
     map
-    availableTiles: Array<Tilemaps.Tile>
     actualTiles: Array<Tilemaps.Tile>
 
 
@@ -14,7 +13,6 @@ export default class MapMarker extends Phaser.GameObjects.GameObject {
         this.scene = scene
         this.marker = this.scene.add.graphics()
         this.map = map
-        this.availableTiles = availableTiles
         this.create()
         scene.events.on('update', (time, delta) => {
             this.update(time, delta)
@@ -34,6 +32,7 @@ export default class MapMarker extends Phaser.GameObjects.GameObject {
     }
 
     onClick() {
+        this.emit("place", this.actualTiles)
         this.marker.clear()
         this.setActive(false).destroy()
     }

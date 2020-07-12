@@ -11,7 +11,7 @@ import {towers} from '../../collections/Towers'
 import TowerBuilder from '../objects/TowerLists'
 import TowerButton from '../objects/TowerButton';
 import TowerLists from '../objects/TowerLists';
-import MapMarker from '../objects/MapMarker';
+import TowerMarker from '../objects/TowerMarker';
 
 
 export default class MainScene extends Phaser.Scene {
@@ -84,8 +84,11 @@ export default class MainScene extends Phaser.Scene {
         }
       }
     })
-    console.log("map marker")
-    new MapMarker(this, this.map, this.map.turretsTiles)
+    // TO DO
+    // To trzeba przenisc do towerLists, tworzyc taki marker po wybraniu wieży
+    new TowerMarker(this, this.map).on('place', (tiles) => {
+      console.log(tiles)
+    })
  }
 
   update(time, delta) {
