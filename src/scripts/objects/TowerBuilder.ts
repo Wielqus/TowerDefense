@@ -2,42 +2,39 @@ import TowerLists from "./TowerLists"
 import TowerButton from "./TowerButton"
 import { Tilemaps } from "phaser"
 import Tower from "./Tower"
+import { towers } from "../../collections/Towers"
+import ITower from "../Interfaces/ITower"
+import TowerMarker from "./TowerMarker"
 
 export default class TowerBuilder extends Phaser.GameObjects.GameObject{
     scene: Phaser.Scene
     towerLists:TowerLists
     map
+    towers: ITower
+    correctPlace: boolean
+    currentMarker: TowerMarker
+    actualTiles: any
 
-    constructor(scene:Phaser.Scene, map, towerLists: TowerLists){
+    constructor(scene:Phaser.Scene, map, towerLists: TowerLists, towers: {}){
         super(scene, 'towerBuilder')
         this.towerLists = towerLists
         this.map = map
         this.scene = scene
-        this.create()
+        this.correctPlace = false
     }
-    create(){
-        this.scene.input.on('pointerDown', () => {
-            if(this.checkActiveButtons()){
-                const tile = this.map.getTile(this.scene.input.x + this.scene.cameras.cameras[0].scrollX, this.scene.input.y + this.scene.cameras.cameras[0].scrollY)
-                if(this.checkForCollisionsWithUI(tile)){
-                    this.placeTower(tile)
-                }
+    getCurrentBtn(){
+      return this.towerLists.currentTowerBtn
+    }
 
-            }
-        })
-    }
-    checkActiveButtons(){
+    checkActiveButtons():boolean{
         return this.towerLists.currentTowerBtn && this.towerLists.currentTowerBtn instanceof TowerButton
     }
-
-    checkForCollisionsWithUI(tile: Tilemaps.Tile){
-        const [UI_X, UI_Y] = this.towerLists.get_area()
-        return tile && Phaser.Math.Distance.Between(tile.pixelX, tile.pixelY, UI_X, UI_Y) > this.towerLists.height
-    }
-    placeTower(tile){
-        let towerData = this.towerLists.currentTowerBtn.towerData
-        this.scene.towers.push(new Tower(this.scene, tile.pixelX, tile.pixelY, towerData))
+    placeTower(tiles, towers){
+      towers.push(new Tower(this.scene, (tiles[0].pixelX + tiles[1].pixelX + tiles[1].width) / 2, (tiles[0].pixelY + tiles[2].pixelY) / 2, this.towerLists.currentTowerBtn.towerData))
+      if(this.towerLists.currentTowerBtn instanceof TowerButton){
         this.towerLists.currentTowerBtn.deactivate()
+      }
     }
+
 }
 

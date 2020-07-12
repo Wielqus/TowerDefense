@@ -8,10 +8,11 @@ import MonstersList from '../objects/MonstersList';
 import IMonster from '../Interfaces/IMonster';
 import WaveCreator from '../objects/WaveCreator';
 import { towers } from '../../collections/Towers'
-import TowerBuilder from '../objects/TowerLists'
+import TowerBuilder from '../objects/TowerBuilder'
 import TowerButton from '../objects/TowerButton';
 import TowerLists from '../objects/TowerLists';
 import TowerMarker from '../objects/TowerMarker';
+import { NamedModulesPlugin } from 'webpack';
 
 
 export default class MainScene extends Phaser.Scene {
@@ -25,10 +26,14 @@ export default class MainScene extends Phaser.Scene {
   // towerBuilder: TowerBuilder
   towersList: TowerLists
   towerBuilder: TowerBuilder
+  towerMarker: any
+  correctPlace: boolean
+  towerTiles: any
 
   constructor() {
     super({ key: 'MainScene' })
     this.debug = new Debug(this)
+    this.towerTiles
   }
 
   init(data) {
@@ -72,39 +77,34 @@ export default class MainScene extends Phaser.Scene {
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
     this.waveCreator = new WaveCreator(this, this.map, this.cameras.cameras[0].displayWidth, this.cameras.cameras[0].displayHeight)
     this.towersList = new TowerLists(this, this.scale.width * 0.9, this.scale.height * 0.6, 1, towers)
-
-    this.input.on('pointerdown', () => {
-      this.debug.set(3, `x: ${this.input.x} y: ${this.input.y}`)
-      if (this.towersList.currentTowerBtn && this.towersList.currentTowerBtn instanceof TowerButton) {
-        let tile = this.map.getTile(this.input.x + this.cameras.cameras[0].scrollX, this.input.y + this.cameras.cameras[0].scrollY)
-        let [UI_X, UI_Y] = this.towersList.get_area()
-        if (tile && Phaser.Math.Distance.Between(tile.pixelX, tile.pixelY, UI_X, UI_Y) > this.towersList.height) { // drugi warunek dopoki nie bedzie tiles.UI
-          let towerData = this.towersList.currentTowerBtn.towerData
-          this.towers.push(new Tower(this, tile.pixelX, tile.pixelY, towerData))
-          this.towersList.currentTowerBtn.deactivate()
-        }
-      }
+    this.towerBuilder = new TowerBuilder(this, this.map, this.towersList, towers)
+    
+    this.input.on('pointermove', () => {
+      if(this.towerBuilder.checkActiveButtons()){
+        if(!this.towerMarker){
+            const currentTowerBtn = this.towerBuilder.getCurrentBtn()
+            this.towerMarker =  new TowerMarker(this, this.map, currentTowerBtn.towerData)
+            this.towerMarker.on('place', (tiles) => {
+              const correct = tiles.every(tile => {
+                if (tile) {
+                  return tile.properties.towerPlace === true
+                }
+                return false
+              })
+              if (correct) {
+                this.towerBuilder.placeTower(tiles, this.towers)
+                this.towerMarker = false
+                
+                tiles.forEach(tile => {
+                  if (tile) {
+                    return tile.properties.towerPlace === false
+                  }
+                });
+              }
+            })
+        }}
     })
-    // TO DO
-    // To trzeba przenisc do towerLists, tworzyc taki marker po wybraniu wieży
-    new TowerMarker(this, this.map, towers.base_tower).on('place', (tiles) => {
-      const correct = tiles.every(tile => {
-        if (tile) {
-          return tile.properties.towerPlace === true
-        }
-        return false
-      })
-      if (correct) {
-        // TO DO
-        // Tutaj postawienie wiezy
-        tiles.forEach(tile => {
-          if (tile) {
-            return tile.properties.towerPlace === false
-          }
-        });
-      }
-    })
-  }
+}
 
   update(time, delta) {
     this.debug.set(1, `fps: ${Math.floor(this.game.loop.actualFps)}`)
@@ -120,9 +120,7 @@ export default class MainScene extends Phaser.Scene {
         tower.enemiesNearby(this.waveCreator.active_monsters)
       })
     }
-    // if(this.towersList.currentTowerBtn && this.towersList.currentTowerBtn instanceof TowerButton){
-    //   new MapMarker(this, this.map, this.map.turretsTiles)
-    // }
-    
-  }
+    // this.towerBuilder.update()
 }
+}
+

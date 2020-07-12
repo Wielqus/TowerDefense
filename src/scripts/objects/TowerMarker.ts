@@ -89,7 +89,6 @@ export default class TowerMarker extends Phaser.GameObjects.GameObject {
                 }
                 this.marker.fillRect(0, 0, 2 * this.map.map.tileWidth, 2 * this.map.map.tileHeight);
                 
-                
                 if (this.scene.input.activePointer.isDown) {
                     this.onClick()
                 }
