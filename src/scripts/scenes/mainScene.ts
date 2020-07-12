@@ -84,8 +84,7 @@ export default class MainScene extends Phaser.Scene {
         }
       }
     })
-    console.log("map marker")
-    new MapMarker(this, this.map, this.map.turretsTiles)
+    
  }
 
   update(time, delta) {
@@ -101,6 +100,9 @@ export default class MainScene extends Phaser.Scene {
       this.towers.forEach(tower => {
       tower.enemiesNearby(this.waveCreator.active_monsters)
     })
+    }
+    if(this.towersList.currentTowerBtn && this.towersList.currentTowerBtn instanceof TowerButton){
+      new MapMarker(this, this.map, this.map.turretsTiles)
     }
     
   }
