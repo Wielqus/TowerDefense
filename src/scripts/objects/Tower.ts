@@ -14,6 +14,7 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
 
     constructor(scene: Phaser.Scene, x:integer, y:integer, towerData: ITower) {
         super(scene, x, y, towerData.name)
+        this.scene = scene
         this.towerData = towerData
         this.x = x
         this.y = y
@@ -47,7 +48,7 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
     }
     
     getClosestTargetWithMostHealth(enemies: Array<Monster>){
-        const mostHealth = Math.max(...enemies.map(enemy => enemy.monsterData.health), 0)
+        const mostHealth = Math.max(...enemies.map(enemy => enemy.monsterData.health))
         const mostHealthEnemies = enemies.filter((enemy) => {return enemy.monsterData.health == mostHealth})
         if (mostHealthEnemies.length > 1){
             return mostHealthEnemies.reduce(
@@ -58,9 +59,9 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
     
     shot(enemy:Monster, bullets: Phaser.GameObjects.Group){
         let angle = Phaser.Math.Angle.Between(this.x, this.y, enemy.x, enemy.y)
-        const bullet = new Bullet(this.scene, this.x, this.y, this.towerData)
+        const bullet = new Bullet(this.scene, this.x, this.y, this.towerData, enemy)
         bullets.add(bullet)
-        bullet.fire(enemy, angle)
+        // bullet.fire(enemy, angle)
     }
     
     activateInteractions(){

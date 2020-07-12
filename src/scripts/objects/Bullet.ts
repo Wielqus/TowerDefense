@@ -12,28 +12,31 @@ export default class Bullet extends Phaser.Physics.Arcade.Image{
     dx: number
     dy: number
     lifespan: number
+    monster: Monster
     
-    constructor(scene: Phaser.Scene, x:integer, y:integer, towerData: ITower) {
+    constructor(scene: Phaser.Scene, x:integer, y:integer, towerData: ITower, monster: Monster) {
         super(scene, x, y, towerData.bullet.name)
+        this.scene = scene
         this.towerData = towerData
         this.bulletData = towerData.bullet
         this.x = x
         this.y = y
         this.lifespan = 1000
+        this.monster = monster
         this.scene.add.existing(this)
         this.scene.physics.add.existing(this)
     }
 
-    fire(monster: Monster, angle){
-        // this.scene.physics.moveToObject(this, monster, 200, 1000)
-        this.dx = Math.cos(angle);
-        this.dy = Math.sin(angle);
-    }
+    // fire(monster: Monster, angle){
+    //     // this.scene.physics.moveToObject(this, monster, 200, 1000)
+    //     // this.dx = Math.cos(angle);
+    //     // this.dy = Math.sin(angle);
+    //     this.monster = monster
+    // }
 
-    update(time, delta){
+    update(time, delta, monster){
         this.lifespan -= delta
-        this.x += this.dx * (this.bulletData.speed);
-        this.y += this.dy * (this.bulletData.speed);
+        this.scene.physics.moveToObject(this, this.monster, this.bulletData.speed)
         if (this.lifespan <= 0)
         {
             this.destroy()
