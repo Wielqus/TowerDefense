@@ -105,11 +105,13 @@ export default class MainScene extends Phaser.Scene {
         }}
     })
     this.input.keyboard.on('keydown-' + 'ESC', () =>{ 
-      this.towerMarker.destroy()
-      this.towerMarker.towerImage.destroy()
-      this.towerMarker = false
-      this.towerBuilder.towerLists.currentTowerBtn.deactivate()
-    })
+      if(this.towerBuilder.towerLists.currentTowerBtn instanceof TowerButton && this.towerMarker){
+        this.towerMarker.destroy()
+        this.towerMarker.towerImage.destroy()
+        this.towerMarker = false
+        this.towerBuilder.towerLists.currentTowerBtn.deactivate()
+      }
+  })
 }
 
   update(time, delta) {
