@@ -9,6 +9,7 @@ export default class TowerMarker extends Phaser.GameObjects.GameObject {
     actualTiles: Array<Tilemaps.Tile>
     tower: ITower
     towerImage: Phaser.GameObjects.Image
+    found: boolean
 
 
     constructor(scene: Phaser.Scene, map, tower: ITower) {
@@ -37,10 +38,12 @@ export default class TowerMarker extends Phaser.GameObjects.GameObject {
     }
 
     onClick() {
-        this.emit("place", this.actualTiles)
-        this.marker.clear()
-        this.towerImage.destroy()
-        this.setActive(false).destroy()
+        if(this.found){
+            this.emit("place", this.actualTiles)
+            this.marker.clear()
+            this.towerImage.destroy()
+            this.setActive(false).destroy()
+        }
     }
 
     findTileNeighbors(mainTile: Phaser.Tilemaps.Tile) {
@@ -76,6 +79,7 @@ export default class TowerMarker extends Phaser.GameObjects.GameObject {
                         }
                         return false
                     })
+                    this.found = found
                     if (found) {
                         this.marker.fillStyle(0x008000, 0.5)
                         this.towerImage.setVisible(true)
