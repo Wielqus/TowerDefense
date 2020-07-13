@@ -97,7 +97,7 @@ export default class MainScene extends Phaser.Scene {
                 
                 tiles.forEach(tile => {
                   if (tile) {
-                    return tile.properties.towerPlace === false
+                    return tile.properties.towerPlace = false
                   }
                 });
               }
