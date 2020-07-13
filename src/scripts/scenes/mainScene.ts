@@ -104,6 +104,12 @@ export default class MainScene extends Phaser.Scene {
             })
         }}
     })
+    this.input.keyboard.on('keydown-' + 'ESC', () =>{ 
+      this.towerMarker.destroy()
+      this.towerMarker.towerImage.destroy()
+      this.towerMarker = false
+      this.towerBuilder.towerLists.currentTowerBtn.deactivate()
+    })
 }
 
   update(time, delta) {
@@ -120,7 +126,6 @@ export default class MainScene extends Phaser.Scene {
         tower.enemiesNearby(this.waveCreator.active_monsters)
       })
     }
-    // this.towerBuilder.update()
 }
 }
 
