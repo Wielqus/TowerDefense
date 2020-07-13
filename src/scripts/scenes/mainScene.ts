@@ -23,17 +23,13 @@ export default class MainScene extends Phaser.Scene {
   map: Map
   debug: Debug
   waveCreator: WaveCreator
-  // towerBuilder: TowerBuilder
-  towersList: TowerLists
   towerBuilder: TowerBuilder
-  towerMarker: any
+  towerMarker: TowerMarker | false
   correctPlace: boolean
-  towerTiles: any
 
   constructor() {
     super({ key: 'MainScene' })
     this.debug = new Debug(this)
-    this.towerTiles
   }
 
   init(data) {
@@ -76,8 +72,7 @@ export default class MainScene extends Phaser.Scene {
 
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
     this.waveCreator = new WaveCreator(this, this.map, this.cameras.cameras[0].displayWidth, this.cameras.cameras[0].displayHeight)
-    this.towersList = new TowerLists(this, this.scale.width * 0.9, this.scale.height * 0.6, 1, towers)
-    this.towerBuilder = new TowerBuilder(this, this.map, this.towersList, towers)
+    this.towerBuilder = new TowerBuilder(this, this.map, towers)
     
     this.input.on('pointermove', () => {
       if(this.towerBuilder.checkActiveButtons()){
@@ -121,7 +116,7 @@ export default class MainScene extends Phaser.Scene {
     this.debug.update()
     this.debug.setPosition(this.cameras.cameras[0].scrollX, this.cameras.cameras[0].scrollY)
     this.waveCreator.update()
-    this.towersList.update()
+    this.towerBuilder.towerLists.update() //set position of UI
 
     if (this.towers.length > 0) {
       this.towers.forEach(tower => {
