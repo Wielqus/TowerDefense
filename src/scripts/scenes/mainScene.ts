@@ -11,6 +11,7 @@ import {towers} from '../../collections/Towers'
 import TowerBuilder from '../objects/TowerLists'
 import TowerButton from '../objects/TowerButton';
 import TowerLists from '../objects/TowerLists';
+import UserInterface from '../objects/UserInterface';
 
 
 export default class MainScene extends Phaser.Scene {
@@ -83,6 +84,9 @@ export default class MainScene extends Phaser.Scene {
         }
       }
     })  
+
+    // User interface
+    new UserInterface(this, this.cameras.cameras[0].displayWidth / 2, this.cameras.cameras[0].displayHeight - 50).setScrollFactor(0);
  }
 
   update(time, delta) {
