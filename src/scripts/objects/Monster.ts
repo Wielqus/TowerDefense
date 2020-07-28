@@ -13,7 +13,7 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
         super(scene, path[0].pixelX, path[0].pixelY, monsterData.name)
         this.scene = scene
         this.path = Array.from(path)
-        this.monsterData = monsterData
+        this.monsterData = {...monsterData}
         this.actualPathElement = 0
         this.timeFromLastMove = 0
         this.scene.add.existing(this)
@@ -59,6 +59,15 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
                 }
             }
         }else{
+            this.destroy()
+        }
+    }
+
+    receiveDamage(damage: integer){
+        this.monsterData.health -= damage
+        if (this.monsterData.health < 0){
+            this.setActive(false)
+            this.setVisible(false)
             this.destroy()
         }
     }

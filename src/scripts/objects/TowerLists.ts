@@ -6,7 +6,7 @@ import CollectionsList from "./CollectionsList";
 export default class TowerLists extends CollectionsList {
     [x: string]: any;
     scene: Phaser.Scene
-    currentTowerBtn: TowerButton | object
+    currentTowerBtn: TowerButton | null
     towerBtns: Array<TowerButton>
 
     constructor(scene, x:number, y:number, columns: number = 1, collectionType){
@@ -22,7 +22,10 @@ export default class TowerLists extends CollectionsList {
         this.currentTowerBtn = icon
     }
     removeCurrent(){
-        this.currentTowerBtn = {}
+        if(this.currentTowerBtn){
+            this.currentTowerBtn = null
+        }
+        
         
     }
 

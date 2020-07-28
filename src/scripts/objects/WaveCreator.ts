@@ -13,7 +13,7 @@ export default class WaveCreator extends GridSizer {
     scene: Phaser.Scene
     map: Map
     monsters: Array<IMonster>
-    active_monsters: Array<Monster>
+    active_monsters: Phaser.GameObjects.Group
 
     constructor(scene: Phaser.Scene, map: Map, x: number, y: number) {
         super(scene, x, y, {
@@ -28,7 +28,7 @@ export default class WaveCreator extends GridSizer {
             this.scene = scene
         this.map = map
         this.monsters = []
-        this.active_monsters = []
+        this.active_monsters = this.scene.add.group({classType: Monster})
         this.create()
     }
 
@@ -78,7 +78,7 @@ export default class WaveCreator extends GridSizer {
         const monster = this.monsters.pop()
         if(monster){
             new Promise((resolve) => {
-                setTimeout(() => {this.active_monsters.push(new Monster(this.scene, this.map.getRandomPath(), monster)); resolve() }, (Math.random() * 300) + 100)
+                setTimeout(() => {this.active_monsters.add(new Monster(this.scene, this.map.getRandomPath(), monster)); resolve() }, (Math.random() * 300) + 100)
             }).then(() => {
                 this.start()
             })
