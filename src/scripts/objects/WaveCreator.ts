@@ -78,7 +78,14 @@ export default class WaveCreator extends GridSizer {
         const monster = this.monsters.pop()
         if(monster){
             new Promise((resolve) => {
-                setTimeout(() => {this.active_monsters.add(new Monster(this.scene, this.map.getRandomPath(), monster)); resolve() }, (Math.random() * 300) + 100)
+                setTimeout(() => {
+                    const monsterInstance = new Monster(this.scene, this.map.getRandomPath(), monster).on("finish", () =>{
+                        this.emit('monsterFinish', monster)
+                    }).on('death', () => {
+                        this.emit('monsterDeath', monster)
+                    })
+                    this.active_monsters.add(monsterInstance); 
+                    resolve() }, (Math.random() * 300) + 100)
             }).then(() => {
                 this.start()
             })

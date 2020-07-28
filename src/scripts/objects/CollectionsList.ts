@@ -12,7 +12,7 @@ export default class CollectionsList extends GridSizer{
             row: Math.ceil(Array.from(Object.entries(collectionType)).length / columns),
             space: {
                      left: 5, right: 5, top: 5, bottom:5,
-                     column: 10,
+                     column: 50,
                      row: 10     
                  },
         }),

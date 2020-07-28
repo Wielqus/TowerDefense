@@ -59,6 +59,7 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
                 }
             }
         }else{
+            this.emit("finish")
             this.destroy()
         }
     }
@@ -68,6 +69,7 @@ export default class Monster extends Phaser.Physics.Arcade.Sprite {
         if (this.monsterData.health < 0){
             this.setActive(false)
             this.setVisible(false)
+            this.emit("death")
             this.destroy()
         }
     }

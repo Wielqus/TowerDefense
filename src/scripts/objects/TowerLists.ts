@@ -30,9 +30,6 @@ export default class TowerLists extends CollectionsList {
     }
 
     create(){
-        const background = new RoundRectangle(this.scene, 0, 0, 50, 50, 5, 0x4e342e);
-        this.scene.add.existing(background)
-        this.addBackground(background)
         Array.from(Object.entries(towers)).forEach((tower) => {
             let newTower = new TowerButton(this.scene, 0, 0, tower[1], this)
             this.towerBtns.push(newTower)

@@ -29,6 +29,10 @@ export default class MainScene extends Phaser.Scene {
   towerBuilder: TowerBuilder
   towerMarker: TowerMarker | false
   correctPlace: boolean
+  gold: number
+  health: number
+  goldText: Phaser.GameObjects.Text
+  healthText: Phaser.GameObjects.Text
 
   constructor() {
     super({ key: 'MainScene' })
@@ -64,6 +68,13 @@ export default class MainScene extends Phaser.Scene {
     this.debug.add(`x: y: `)
     this.bullets = this.add.group({runChildUpdate: true});
     this.towers = []
+    this.gold = 500;
+    this.health = 100;
+    this.healthText= new Phaser.GameObjects.Text(this, 0, 200, `HP :${this.health}`, {}).setScrollFactor(0)
+    this.add.existing(this.healthText)
+    this.goldText= new Phaser.GameObjects.Text(this, 0, 250, `GOLD :${this.gold}`, {}).setScrollFactor(0)
+    this.add.existing(this.goldText)
+    
 
     // Camera movement settings
     const controlConfig = {
@@ -76,7 +87,16 @@ export default class MainScene extends Phaser.Scene {
     };
 
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
-    this.waveCreator = new WaveCreator(this, this.map, this.cameras.cameras[0].displayWidth, this.cameras.cameras[0].displayHeight)
+    this.waveCreator = new WaveCreator(this, this.map, this.cameras.cameras[0].displayWidth - 200, 100)
+    this.waveCreator.on('monsterFinish', (monster) => {
+      this.health = this.health - 10
+      if(this.health <= 0){
+        this.scene.start('MenuScene', {})
+      }
+    })
+    this.waveCreator.on('monsterDeath', (monster) => {
+      this.gold = this.gold + 10
+    })
     this.towerBuilder = new TowerBuilder(this, this.map, towers)
     
     this.input.on('pointermove', () => {
@@ -94,6 +114,7 @@ export default class MainScene extends Phaser.Scene {
               })
               if (correct) {
                 this.towerBuilder.placeTower(tiles, this.towers)
+                this.gold = this.gold - 10
                 this.towerMarker = false
                 
                 tiles.forEach(tile => {
@@ -126,12 +147,14 @@ export default class MainScene extends Phaser.Scene {
     this.map.update()
     this.debug.update()
     this.debug.setPosition(this.cameras.cameras[0].scrollX, this.cameras.cameras[0].scrollY)
-    this.waveCreator.update()
+    //this.waveCreator.update()
     this.towerBuilder.towerLists.update() //set position of UI
 
     if (this.towers.length > 0 && this.waveCreator.active_monsters.getLength() > 0) {
       this.towers.forEach(tower => {tower.update(time, delta, this.waveCreator.active_monsters, this.bullets) })
     }
+    this.healthText.text = `HP: ${this.health}`
+    this.goldText.text = `GOLD: ${this.gold}`
 }
 }
 

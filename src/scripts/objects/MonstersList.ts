@@ -13,9 +13,6 @@ export default class MonstersList extends CollectionsList {
     }
 
     create() {
-        const background = new RoundRectangle(this.scene, 0, 0, 100, 100, 5, 0x4e342e);
-        this.scene.add.existing(background)
-        this.addBackground(background)
 
         Array.from(Object.entries(monsters)).forEach((monster) => {
             const container = this.scene.add.container(0, 0)

@@ -11,6 +11,7 @@ export default class MonsterButton extends Phaser.GameObjects.Image {
         .on('pointerdown', () => {
             callback()
         });
+        
 
         return this
     }
