@@ -11,6 +11,7 @@
     <meta name="theme-color" content="#000000" />
 
     <link rel="manifest" href="./manifest.json" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
 
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -48,6 +49,49 @@
     </script> -->
   </head>
   <body>
+    <nav style="background-color: transparent;" class="navbar is-transparent is-fixed-top" role="navigation" aria-label="main navigation">
+    
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <a style="display:none;" id="pauseButton" class="button is-primary">
+                <strong>Menu</strong>
+              </a>
+            </div>
+          </div>
+        </div>
+    </nav>
     <div id="phaser-game"></div>
+    <div id="start-game" style=" background-color:aliceblue; width: 100vw; height: 100vh;z-index: 2; position: absolute; top:0px; left: 0px;display:flex; justify-content: center;align-items: center;">
+      <main class="box " style="width: 50vw; height: 50vh;">
+      <header><h1 class="title ">Tower defense</h1></header>
+      <nav class="menu has-text-centered">
+        <ul class="menu-list">
+          <li><a class="mapButton" data-index="0">Mapa 1</a></li>
+          <li><a class="mapButton" data-index="1">Mapa 2</a></li>
+        </ul>
+      </nav>
+    </main>
+    </div>
+
+    <div id="pauseModal" class="modal has-text-centered">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Menu</p>
+        </header>
+        <section class="modal-card-body">
+          <nav class="menu has-text-centered">
+            <ul class="menu-list">
+              <li><a id="resumeButton">Resume</a></li>
+              <li><a id="restartButton">Restart</a></li>
+              <li><a id="exitButton">Exit</a></li>
+            </ul>
+          </nav>
+        </section>
+        <footer class="modal-card-foot has-text-centered">
+          <p class="modal-card-title">Tower defense</p>
+        </footer>
+      </div>
   </body>
 </html>

@@ -37,6 +37,7 @@ export default class MainScene extends Phaser.Scene {
   constructor() {
     super({ key: 'MainScene' })
     this.debug = new Debug(this)
+    
   }
 
   init(data) {
@@ -62,6 +63,7 @@ export default class MainScene extends Phaser.Scene {
   create() {
     this.map.create()
     this.debug.create()
+    this.debug.clear()
     this.debug.add(`Phaser v${Phaser.VERSION}`)
     this.debug.add(`fps: ${Math.floor(this.game.loop.actualFps)}`)
     this.debug.add("Map debug", "m", () => this.map.debugOn(), () => this.map.debugOff())
@@ -91,7 +93,7 @@ export default class MainScene extends Phaser.Scene {
     this.waveCreator.on('monsterFinish', (monster) => {
       this.health = this.health - 10
       if(this.health <= 0){
-        this.scene.start('MenuScene', {})
+        this.game.events.emit('finish')
       }
     })
     this.waveCreator.on('monsterDeath', (monster) => {

@@ -26,14 +26,14 @@ export default class Map {
 
 
   preload() {
-    this.scene.load.tilemapTiledJSON("map", this.mapData.jsonFile);
+    this.scene.load.tilemapTiledJSON(this.mapData.name, this.mapData.jsonFile);
     this.mapData.tileSets.forEach(tileSet => {
       this.scene.load.image(tileSet.name, tileSet.source)
     })
   }
 
   create() {
-    this.map = this.scene.make.tilemap({ key: 'map' });
+    this.map = this.scene.make.tilemap({ key: this.mapData.name });
     const tileSets = this.mapData.tileSets.map(tileSet => {
       return this.map.addTilesetImage(tileSet.name, tileSet.name)
     })
@@ -49,7 +49,6 @@ export default class Map {
     this.loadTiles()
     this.findPath(tileSets)
     this.map.setLayer("Top")
-
   }
 
   loadTiles() {
@@ -209,6 +208,7 @@ export default class Map {
     }
 
   }
+
   update() {
 
   }

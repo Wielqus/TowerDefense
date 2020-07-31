@@ -7,6 +7,10 @@ export default class Debug{
         this.debugToolsList = []
     }
 
+    clear(){
+        this.debugToolsList = []
+    }
+
     create(){        
         this.text = this.scene.add.text(16, 16, this.getDebugMessages(), {
             fontSize: '18px',
