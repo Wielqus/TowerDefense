@@ -1,6 +1,5 @@
 import TowerButton from "./TowerButton"
 import {towers} from "../../collections/Towers"
-import RoundRectangle from 'phaser3-rex-plugins/plugins/roundrectangle.js';
 import CollectionsList from "./CollectionsList";
 
 export default class TowerLists extends CollectionsList {
@@ -9,24 +8,27 @@ export default class TowerLists extends CollectionsList {
     currentTowerBtn: TowerButton | null
     towerBtns: Array<TowerButton>
 
-    constructor(scene, x:number, y:number, columns: number = 1, collectionType){
+    constructor(scene, x:number, y:number, columns: number = 2, collectionType){
         super(scene, x, y, columns, collectionType)
         this.towerBtns = []
         this.create()
     }
 
-    addCurrent(icon:TowerButton){
+    getCurrentButton(){
+        return this.currentTowerBtn;
+    }
+
+    addCurrentButton(icon:TowerButton){
         if(this.currentTowerBtn instanceof TowerButton){
             this.currentTowerBtn.deactivate()
         }
         this.currentTowerBtn = icon
     }
-    removeCurrent(){
+
+    removeCurrentButton(){
         if(this.currentTowerBtn){
             this.currentTowerBtn = null
         }
-        
-        
     }
 
     create(){
@@ -42,11 +44,6 @@ export default class TowerLists extends CollectionsList {
         });
 
         this.layout();
-    }
-
-    update() {
-        const camera = this.scene.cameras.cameras[0]
-        this.setPosition(camera.displayWidth + camera.scrollX - (this.width *1.5), camera.displayHeight + camera.scrollY - (this.height*1.5))
     }
 
     get_area(){

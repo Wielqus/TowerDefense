@@ -1,6 +1,6 @@
 import { GridSizer } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
 import RoundRectangle from 'phaser3-rex-plugins/plugins/roundrectangle.js';
-import TowerLists from './TowerLists';
+import towerLists from './TowerLists';
 import { towers } from '../../collections/Towers';
 import MonsterButton from './MonsterButton';
 import MonstersList from './MonstersList';
@@ -9,8 +9,9 @@ import { monsters } from '../../collections/Monsters';
 export default class CollectionsList extends GridSizer{
     [x: string]: any
     scene: Phaser.Scene
+    towerLists: towerLists
 
-    constructor(scene, x: number, y: number) {
+    constructor(scene, x: number, y: number, towerLists: towerLists) {
         super(scene, x, y, {
             column: 3,
             row: 1,
@@ -24,6 +25,7 @@ export default class CollectionsList extends GridSizer{
                  rowProportions: 0,
         }),
         this.scene = scene
+        this.towerLists = towerLists
         scene.add.existing(this)
         this.create()
     }
@@ -35,8 +37,8 @@ export default class CollectionsList extends GridSizer{
         background.setAlpha(0.3)
         this.scene.add.existing(background)
         this.addBackground(background)
-        this.add(new TowerLists(this.scene, 0, 0, 2, towers), {
-            column: 1,
+        this.add(this.towerLists, {
+            column: 2,
             row: 0,
             align: 'center',
         })

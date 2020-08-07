@@ -27,11 +27,11 @@ export default class TowerButton extends Phaser.GameObjects.Image{
     activate(){
         this.clicked = true
         this.clearTint()
-        this.parent.addCurrent(this)
+        this.parent.addCurrentButton(this)
     }
     deactivate(){
         this.tint = 0xBEBEBE
-        this.parent.removeCurrent()
+        this.parent.removeCurrentButton()
         this.clicked = false
 
     }
