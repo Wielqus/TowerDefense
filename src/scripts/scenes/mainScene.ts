@@ -12,10 +12,10 @@ import {bullets} from '../../collections/Bullets'
 import IBullet from '../Interfaces/IBullet'
 import TowerBuilder from '../objects/TowerBuilder'
 import TowerButton from '../objects/TowerButton';
-import TowerLists from '../objects/TowerLists';
 import UserInterface from '../objects/UserInterface';
 import TowerMarker from '../objects/TowerMarker';
 import { NamedModulesPlugin } from 'webpack';
+import CollectionsList from '../objects/CollectionsList';
 
 export default class MainScene extends Phaser.Scene {
   fpsText: Phaser.GameObjects.Text
@@ -27,13 +27,13 @@ export default class MainScene extends Phaser.Scene {
   debug: Debug
   waveCreator: WaveCreator
   towerBuilder: TowerBuilder
-  towerLists : TowerLists
   towerMarker: TowerMarker | false
   correctPlace: boolean
   gold: number
   health: number
   goldText: Phaser.GameObjects.Text
   healthText: Phaser.GameObjects.Text
+  UI: CollectionsList
 
   constructor() {
     super({ key: 'MainScene' })
@@ -77,8 +77,8 @@ export default class MainScene extends Phaser.Scene {
     this.add.existing(this.healthText)
     this.goldText= new Phaser.GameObjects.Text(this, 0, 250, `GOLD :${this.gold}`, {}).setScrollFactor(0)
     this.add.existing(this.goldText)
-    this.towerLists = new TowerLists(this, 0, 0, 2, towers)
     this.towerBuilder = new TowerBuilder(this, towers)
+    this.UI = new UserInterface(this, this.cameras.cameras[0].displayWidth / 2, this.cameras.cameras[0].displayHeight - 50).setScrollFactor(0);
     
 
     // Camera movement settings
@@ -105,7 +105,7 @@ export default class MainScene extends Phaser.Scene {
     
 
     this.input.on('pointermove', () => {
-      const activeButton = this.towerLists.getCurrentButton();
+      const activeButton = this.UI.getActiveButton();
       if(activeButton && activeButton instanceof TowerButton){
         if(!this.towerMarker){
             this.towerMarker =  new TowerMarker(this, this.map, activeButton.towerData);
@@ -120,6 +120,7 @@ export default class MainScene extends Phaser.Scene {
 
               if (correct) {
                 this.towerBuilder.placeTower(tiles, this.towers, activeButton);
+                activeButton.deactivate();
                 this.gold = this.gold - 10;
                 this.towerMarker = false;
                 
@@ -134,7 +135,7 @@ export default class MainScene extends Phaser.Scene {
     });
 
     this.input.keyboard.on('keydown-' + 'ESC', () =>{ 
-      const currentButton = this.towerLists.getCurrentButton();
+      const currentButton = this.UI.getActiveButton();
       if(currentButton instanceof TowerButton && this.towerMarker){
         this.towerMarker.destroy();
         this.towerMarker.towerImage.destroy();
@@ -142,9 +143,6 @@ export default class MainScene extends Phaser.Scene {
         currentButton.deactivate();
       }
     })  
-
-    // User interface
-    new UserInterface(this, this.cameras.cameras[0].displayWidth / 2, this.cameras.cameras[0].displayHeight - 50, this.towerLists).setScrollFactor(0);
  }
 
   update(time, delta) {

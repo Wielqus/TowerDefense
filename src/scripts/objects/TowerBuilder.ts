@@ -12,14 +12,12 @@ export default class TowerBuilder extends Phaser.GameObjects.GameObject{
 
     constructor(scene:Phaser.Scene, towers: {}){
         super(scene, 'towerBuilder')
-        this.scene = scene
-        this.correctPlace = false
+        this.scene = scene;
     }
         
     placeTower(tiles: Array<Tilemaps.Tile>, towers: Array<Tower>, currentButton){
       if(currentButton instanceof TowerButton){
         towers.push(new Tower(this.scene, (tiles[0].pixelX + tiles[1].pixelX + tiles[1].width) / 2, (tiles[0].pixelY + tiles[2].pixelY) / 2, currentButton.towerData))
-        currentButton.deactivate()
       }
     }
 }
