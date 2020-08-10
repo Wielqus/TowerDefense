@@ -73,6 +73,14 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
         this.on('pointerout', () =>{
             this.rangeCricle.setVisible(false)
         })
+
+        this.on('pointerdown', () => {
+            //TODO new contextMenu(towerData, destroyButon, x, y);
+            this.rangeCricle.destroy();
+            this.setActive(false);
+            this.setVisible(false);
+            this.destroy();
+        })
     }
 
     update(time, delta, enemies: Phaser.GameObjects.Group, bullets:  Phaser.GameObjects.Group){
