@@ -1,6 +1,9 @@
 import ITower from '../Interfaces/ITower';
 import Monster from './Monster';
 import Bullet from './Bullet';
+import TowerContextMenu from './TowerContextMenu';
+import { Tilemaps } from 'phaser';
+
 
 export default class Tower extends Phaser.Physics.Arcade.Image {
     scene: Phaser.Scene
@@ -10,13 +13,15 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
     rangeCricle: Phaser.GameObjects.Arc
     nextTic: number
     _currentTarget: Monster
+    tiles: Array<Tilemaps.Tile>
 
-    constructor(scene: Phaser.Scene, x:integer, y:integer, towerData: ITower) {
+    constructor(scene: Phaser.Scene, x:integer, y:integer, towerData: ITower, tiles: Array<Tilemaps.Tile>) {
         super(scene, x, y, towerData.name)
         this.scene = scene
-        this.towerData = towerData
+        this.towerData = {...towerData}
         this.x = x
         this.y = y
+        this.tiles = tiles
         this.nextTic = 0
         scene.add.existing(this)
         this.activateInteractions()
@@ -75,11 +80,7 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
         })
 
         this.on('pointerdown', () => {
-            //TODO new contextMenu(towerData, destroyButon, x, y);
-            this.rangeCricle.destroy();
-            this.setActive(false);
-            this.setVisible(false);
-            this.destroy();
+            new TowerContextMenu(this.scene, this.x, this.y, this);
         })
     }
 
@@ -96,5 +97,16 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
                 }
             this.nextTic = time + 500;
         }
+    }
+
+    tearDown(){
+        this.clearTiles();
+        this.destroy();
+    }
+
+    clearTiles(){
+        this.tiles.forEach(element => {
+            element.properties.towerPlace = true;
+        });
     }
 }

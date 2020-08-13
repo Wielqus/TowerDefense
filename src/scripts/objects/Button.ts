@@ -9,6 +9,7 @@ export default class Button extends Phaser.GameObjects.Text{
        
         this.on('pointerover', () => {
             this.enterButtonHoverState();
+            this.emit('hover');
         })
         this.on('pointerout', () => {
             this.enterButtonRestState();
