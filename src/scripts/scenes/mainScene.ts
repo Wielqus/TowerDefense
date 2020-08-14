@@ -7,8 +7,8 @@ import { monsters } from '../../collections/Monsters'
 import MonstersList from '../objects/MonstersList';
 import IMonster from '../Interfaces/IMonster';
 import WaveCreator from '../objects/WaveCreator';
-import {towers} from '../../collections/Towers'
-import {bullets} from '../../collections/Bullets'
+import { towers } from '../../collections/Towers'
+import { bullets } from '../../collections/Bullets'
 import IBullet from '../Interfaces/IBullet'
 import TowerBuilder from '../objects/TowerBuilder'
 import TowerButton from '../objects/TowerButton';
@@ -16,6 +16,7 @@ import TowerLists from '../objects/TowerLists';
 import UserInterface from '../objects/UserInterface';
 import TowerMarker from '../objects/TowerMarker';
 import { NamedModulesPlugin } from 'webpack';
+import { Time } from 'phaser';
 
 export default class MainScene extends Phaser.Scene {
   fpsText: Phaser.GameObjects.Text
@@ -33,11 +34,13 @@ export default class MainScene extends Phaser.Scene {
   health: number
   goldText: Phaser.GameObjects.Text
   healthText: Phaser.GameObjects.Text
+  waveTimer: Time.TimerEvent
+  waveText: Phaser.GameObjects.Text
 
   constructor() {
     super({ key: 'MainScene' })
     this.debug = new Debug(this)
-    
+
   }
 
   init(data) {
@@ -55,7 +58,7 @@ export default class MainScene extends Phaser.Scene {
     for (let tower of Object.keys(towers)) {
       this.load.image(towers[tower].name, `./assets/towers/${towers[tower].source}`)
     }
-    for (let [key, bullet] of Object.entries(bullets)){
+    for (let [key, bullet] of Object.entries(bullets)) {
       this.load.image(bullet.name, `./assets/bullets/${bullet.source}`)
     }
   }
@@ -68,15 +71,18 @@ export default class MainScene extends Phaser.Scene {
     this.debug.add(`fps: ${Math.floor(this.game.loop.actualFps)}`)
     this.debug.add("Map debug", "m", () => this.map.debugOn(), () => this.map.debugOff())
     this.debug.add(`x: y: `)
-    this.bullets = this.add.group({runChildUpdate: true});
+    this.bullets = this.add.group({ runChildUpdate: true });
     this.towers = []
-    this.gold = 500;
-    this.health = 100;
-    this.healthText= new Phaser.GameObjects.Text(this, 0, 200, `HP :${this.health}`, {}).setScrollFactor(0)
+    this.gold = 200;
+    this.health = 10;
+    this.healthText = new Phaser.GameObjects.Text(this, 0, 200, `HP :${this.health}`, {}).setScrollFactor(0)
     this.add.existing(this.healthText)
-    this.goldText= new Phaser.GameObjects.Text(this, 0, 250, `GOLD :${this.gold}`, {}).setScrollFactor(0)
+    this.goldText = new Phaser.GameObjects.Text(this, 0, 250, `GOLD :${this.gold}`, {}).setScrollFactor(0)
     this.add.existing(this.goldText)
-    
+    this.waveTimer = this.time.delayedCall(10000, () => { this.startWave() });
+    this.waveText = new Phaser.GameObjects.Text(this, 0, 300, `Next wave in: ${this.waveTimer.delay}`, {}).setScrollFactor(0)
+    this.add.existing(this.waveText)
+
 
     // Camera movement settings
     const controlConfig = {
@@ -91,22 +97,22 @@ export default class MainScene extends Phaser.Scene {
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
     this.waveCreator = new WaveCreator(this, this.map, this.cameras.cameras[0].displayWidth - 200, 100)
     this.waveCreator.on('monsterFinish', (monster) => {
-      this.health = this.health - 10
-      if(this.health <= 0){
+      this.health = this.health - 1
+      if (this.health <= 0) {
         this.game.events.emit('finish')
       }
     })
     this.waveCreator.on('monsterDeath', (monster) => {
-      this.gold = this.gold + 10
+      this.gold = this.gold + monster.cost
     })
     this.towerBuilder = new TowerBuilder(this, this.map, towers)
-    
+
     this.input.on('pointermove', () => {
-      if(this.towerBuilder.checkActiveButtons()){
-        if(!this.towerMarker){
-            const currentTowerBtn: TowerButton | null = this.towerBuilder.getCurrentBtn()
-            if(currentTowerBtn){
-              this.towerMarker =  new TowerMarker(this, this.map, currentTowerBtn.towerData)
+      if (this.towerBuilder.checkActiveButtons()) {
+        if (!this.towerMarker) {
+          const currentTowerBtn: TowerButton | null = this.towerBuilder.getCurrentBtn()
+          if (currentTowerBtn) {
+            this.towerMarker = new TowerMarker(this, this.map, currentTowerBtn.towerData)
             this.towerMarker.on('place', (tiles) => {
               const correct = tiles.every(tile => {
                 if (tile) {
@@ -114,11 +120,11 @@ export default class MainScene extends Phaser.Scene {
                 }
                 return false
               })
-              if (correct) {
+              if (correct && this.towerBuilder.towerLists.currentTowerBtn && this.gold >= this.towerBuilder.towerLists.currentTowerBtn.towerData.cost) {
+                this.gold = this.gold - this.towerBuilder.towerLists.currentTowerBtn.towerData.cost
                 this.towerBuilder.placeTower(tiles, this.towers)
-                this.gold = this.gold - 10
-                this.towerMarker = false
-                
+
+
                 tiles.forEach(tile => {
                   if (tile) {
                     return tile.properties.towerPlace = false
@@ -126,22 +132,52 @@ export default class MainScene extends Phaser.Scene {
                 });
               }
             })
-              }
-            
-        }}
+          }
+
+        }
+      }
     })
-    this.input.keyboard.on('keydown-' + 'ESC', () =>{ 
-      if(this.towerBuilder.towerLists.currentTowerBtn instanceof TowerButton && this.towerMarker){
+    this.input.keyboard.on('keydown-' + 'ESC', () => {
+      if (this.towerBuilder.towerLists.currentTowerBtn instanceof TowerButton && this.towerMarker) {
         this.towerMarker.destroy()
         this.towerMarker.towerImage.destroy()
         this.towerMarker = false
         this.towerBuilder.towerLists.currentTowerBtn.deactivate()
       }
-    })  
+    })
 
     // User interface
     new UserInterface(this, this.cameras.cameras[0].displayWidth / 2, this.cameras.cameras[0].displayHeight - 50).setScrollFactor(0);
- }
+  }
+
+  startWave() {
+    const wave = this.map.mapData.waves.pop()
+    if (wave) {
+      this.startMonster(wave)
+    }
+  }
+
+  startMonster(monsters: Array<IMonster>) {
+    const monster = monsters.pop()
+    if (monster) {
+      new Promise((resolve) => {
+        setTimeout(() => {
+          const monsterInstance = new Monster(this, this.map.getRandomPath(), monster).on("finish", () => {
+            //this.health = this.health - 10
+            if (this.health <= 0) {
+              this.game.events.emit('finish')
+            }
+          }).on('death', () => {
+            this.gold = this.gold + 10
+          })
+          this.waveCreator.active_monsters.add(monsterInstance)
+          resolve()
+        }, (Math.random() * 300) + 100)
+      }).then(() => {
+        this.startMonster(monsters)
+      })
+    }
+  }
 
   update(time, delta) {
     this.debug.set(1, `fps: ${Math.floor(this.game.loop.actualFps)}`)
@@ -151,12 +187,19 @@ export default class MainScene extends Phaser.Scene {
     this.debug.setPosition(this.cameras.cameras[0].scrollX, this.cameras.cameras[0].scrollY)
     //this.waveCreator.update()
     this.towerBuilder.towerLists.update() //set position of UI
+    if (this.map.mapData.waves.length === 0 && this.waveCreator.active_monsters.getLength()) {
+      this.game.events.emit('finish')
+    }
+    if (this.waveCreator.active_monsters.getLength() === 0 && Math.round((this.waveTimer.delay - this.waveTimer.getElapsed()) / 1000) === 0) {
+      this.waveTimer = this.time.delayedCall(10000, () => { this.startWave() });
+    }
 
     if (this.towers.length > 0 && this.waveCreator.active_monsters.getLength() > 0) {
-      this.towers.forEach(tower => {tower.update(time, delta, this.waveCreator.active_monsters, this.bullets) })
+      this.towers.forEach(tower => { tower.update(time, delta, this.waveCreator.active_monsters, this.bullets) })
     }
     this.healthText.text = `HP: ${this.health}`
     this.goldText.text = `GOLD: ${this.gold}`
-}
+    this.waveText.text = `Next wave in: ${Math.round((this.waveTimer.delay - this.waveTimer.getElapsed()) / 1000)}`
+  }
 }
 

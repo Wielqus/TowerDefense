@@ -1,3 +1,4 @@
+import { monsters } from './Monsters';
 export let maps = [
     {
         "name":     "Test map 2",
@@ -18,6 +19,25 @@ export let maps = [
             {
                 "name": "Objects",
             }
+        ],
+        "waves": [
+            [
+                monsters.skeleton,
+                monsters.skeleton,
+                monsters.skeleton,
+                monsters.skeleton,
+                monsters.skeleton,
+            ],
+            [
+                monsters.skeleton,
+                monsters.skeleton,
+                monsters.skeleton,
+                monsters.skeleton,
+                monsters.skeleton,
+                monsters.mage,
+                monsters.mage,
+                monsters.snake
+            ]
         ]
     },
     {
@@ -39,6 +59,25 @@ export let maps = [
             {
                 "name": "Objects",
             }
+        ],
+        "waves": [
+            [
+                monsters.skeleton,
+                monsters.skeleton,
+                monsters.skeleton,
+                monsters.skeleton,
+                monsters.skeleton,
+            ],
+            [
+                monsters.skeleton,
+                monsters.skeleton,
+                monsters.skeleton,
+                monsters.skeleton,
+                monsters.skeleton,
+                monsters.mage,
+                monsters.mage,
+                monsters.snake
+            ]
         ]
     }
 

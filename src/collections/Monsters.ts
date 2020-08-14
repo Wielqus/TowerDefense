@@ -1,9 +1,9 @@
 export const monsters = {
     skeleton: {
         name: "Skeleton",
-        health: 200,
+        health: 100,
         source: "skeleton.png",
-        speed: 100,
+        speed: 80,
         damage: 30,
         width: 32,
         height: 32,
@@ -28,13 +28,14 @@ export const monsters = {
                 "startFrame": 1,
                 "endFrame": 3
             }
-        ]
+        ],
+        cost: 20
     },
     mage: {
         name: "Mage",
-        health: 100,
+        health: 150,
         source: "mage.png",
-        speed: 150,
+        speed: 100,
         damage: 50,
         width: 32,
         height: 32,
@@ -59,13 +60,14 @@ export const monsters = {
                 "startFrame": 1,
                 "endFrame": 3
             }
-        ]
+        ],
+        cost: 50
     },
     snake: {
         name: "Snake",
-        health: 100,
+        health: 200,
         source: "snake.png",
-        speed: 170,
+        speed: 100,
         damage: 50,
         width: 32,
         height: 32,
@@ -90,6 +92,7 @@ export const monsters = {
                 "startFrame": 1,
                 "endFrame": 3
             }
-        ]
+        ],
+        cost: 100
     }
 }

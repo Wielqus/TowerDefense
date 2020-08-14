@@ -8,4 +8,5 @@ export default interface ITower{
     width: integer,
     height: integer,
     bullet: IBullet,
+    cost: number,
 }
