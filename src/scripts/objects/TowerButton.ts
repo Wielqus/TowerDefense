@@ -13,7 +13,7 @@ export default class TowerButton extends Phaser.GameObjects.Image{
         this.active = false;
         this.towerData = tower;
         this.tint = 0xBEBEBE;
-        this.setInteractive().on('pointerdown', () =>{
+        this.setInteractive({useHandCursor: true}).on('pointerdown', () =>{
             this.isActive() ? this.deactivate(): this.activate()
         });
         this.observer = observer;

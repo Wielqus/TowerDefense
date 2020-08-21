@@ -45,14 +45,15 @@ export default class TowerContextMenu extends Phaser.GameObjects.Container{
     }
 
     destroyTower(){
-        this.tower.tearDown();
         this.hideContextMenu();
+        this.tower.emit('towerDestroy');
+        this.tower.tearDown();
     }
 
     updateTower(){
         this.tower.towerData.damage += 5;
         this.updateText(this.tower.towerData.damage);
-        this.emit('update');
+        this.tower.emit('towerUpdate');
     }
 
     hideContextMenu(){
@@ -61,5 +62,6 @@ export default class TowerContextMenu extends Phaser.GameObjects.Container{
         this.hideContextMenuBtn.destroy();
         this.text.destroy();
         this.destroy();
+        this.tower.hideContextMenu();
     }
 }
