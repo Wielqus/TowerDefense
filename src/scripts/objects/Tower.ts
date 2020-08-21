@@ -1,6 +1,9 @@
 import ITower from '../Interfaces/ITower';
 import Monster from './Monster';
 import Bullet from './Bullet';
+import TowerContextMenu from './TowerContextMenu';
+import { Tilemaps } from 'phaser';
+
 
 export default class Tower extends Phaser.Physics.Arcade.Image {
     scene: Phaser.Scene
@@ -10,16 +13,20 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
     rangeCricle: Phaser.GameObjects.Arc
     nextTic: number
     _currentTarget: Monster
+    tiles: Array<Tilemaps.Tile>
+    currentlyActiveMenu: boolean
 
-    constructor(scene: Phaser.Scene, x:integer, y:integer, towerData: ITower) {
+    constructor(scene: Phaser.Scene, x:integer, y:integer, towerData: ITower, tiles: Array<Tilemaps.Tile>) {
         super(scene, x, y, towerData.name)
-        this.scene = scene
-        this.towerData = towerData
-        this.x = x
-        this.y = y
-        this.nextTic = 0
-        scene.add.existing(this)
-        this.activateInteractions()
+        this.scene = scene;
+        this.towerData = {...towerData};
+        this.x = x;
+        this.y = y;
+        this.tiles = tiles;
+        this.nextTic = 0;
+        this.currentlyActiveMenu = false;
+        scene.add.existing(this);
+        this.activateInteractions();
     }
 
     currentTarget(target: Monster){
@@ -46,14 +53,21 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
         return enemies.filter((enemy) => this.activeEnemyInRange(enemy))
     }
     
-    getClosestTargetWithMostHealth(enemies: Array<Monster>){
-        const mostHealth = Math.max(...enemies.map(enemy => enemy.monsterData.health))
-        const mostHealthEnemies = enemies.filter((enemy) => {return enemy.monsterData.health == mostHealth})
-        if (mostHealthEnemies.length > 1){
-            return mostHealthEnemies.reduce(
-                (prev, current) => (this.countDistance(prev) > this.countDistance(current)? current: prev))
+    // getClosestTargetWithMostHealth(enemies: Array<Monster>){
+    //     const mostHealth = Math.max(...enemies.map(enemy => enemy.monsterData.health))
+    //     const mostHealthEnemies = enemies.filter((enemy) => {return enemy.monsterData.health == mostHealth})
+    //     if (mostHealthEnemies.length > 1){
+    //         return mostHealthEnemies.reduce(
+    //             (prev, current) => (this.countDistance(prev) > this.countDistance(current)? current: prev))
+    //     }
+    //     return mostHealthEnemies[0]
+    // }
+
+    getClosestTarget(enemies: Array<Monster>){
+        if(enemies.length > 1){
+            return enemies.reduce((prev, next) => (this.countDistance(prev) > this.countDistance(next) ? next: prev));
         }
-        return mostHealthEnemies[0]
+        return enemies[0];
     }
     
     shot(enemy:Monster, bullets: Phaser.GameObjects.Group){
@@ -62,7 +76,7 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
     }
     
     activateInteractions(){
-        this.setInteractive()
+        this.setInteractive({useHandCursor: true})
         this.on('pointerover', () => {
             if(!this.rangeCricle){
                 this.drawRange(this.scene)
@@ -73,20 +87,42 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
         this.on('pointerout', () =>{
             this.rangeCricle.setVisible(false)
         })
+
+        this.on('pointerdown', () => {
+            if(!this.currentlyActiveMenu){
+                new TowerContextMenu(this.scene, this.x, this.y, this);
+                this.currentlyActiveMenu = true;
+            }
+        })
     }
 
     update(time, delta, enemies: Phaser.GameObjects.Group, bullets:  Phaser.GameObjects.Group){
         if(time > this.nextTic) {
-                const currentTarget = this.getCurrentTarget()
+                const currentTarget = this.getCurrentTarget();
                 if(!currentTarget || !this.activeEnemyInRange(currentTarget)){
-                    const reachableEnemies = this.enemiesNearby(enemies.getChildren())
-                    const candidate = this.getClosestTargetWithMostHealth(reachableEnemies)
-                    this.currentTarget(candidate)
+                    const reachableEnemies = this.enemiesNearby(enemies.getChildren());
+                    const candidate = this.getClosestTarget(reachableEnemies);
+                    this.currentTarget(candidate);
                 }
                 else{
-                    this.shot(currentTarget, bullets)
+                    this.shot(currentTarget, bullets);
                 }
             this.nextTic = time + 500;
         }
+    }
+
+    hideContextMenu(){
+        this.currentlyActiveMenu = false;
+    }
+
+    tearDown(){
+        this.clearTiles();
+        this.destroy();
+    }
+
+    clearTiles(){
+        this.tiles.forEach(element => {
+            element.properties.towerPlace = true;
+        });
     }
 }

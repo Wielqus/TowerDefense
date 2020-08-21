@@ -10,7 +10,6 @@ import WaveCreator from '../objects/WaveCreator';
 import { towers } from '../../collections/Towers'
 import { bullets } from '../../collections/Bullets'
 import IBullet from '../Interfaces/IBullet'
-import TowerBuilder from '../objects/TowerBuilder'
 import TowerButton from '../objects/TowerButton';
 import UserInterface from '../objects/UserInterface';
 import TowerMarker from '../objects/TowerMarker';
@@ -28,7 +27,6 @@ export default class MainScene extends Phaser.Scene {
   map: Map
   debug: Debug
   waveCreator: WaveCreator
-  towerBuilder: TowerBuilder
   towerMarker: TowerMarker | false
   correctPlace: boolean
   gold: number
@@ -85,7 +83,6 @@ export default class MainScene extends Phaser.Scene {
     this.waveTimer = this.time.delayedCall(10000, () => { this.startWave() });
     this.waveText = new Phaser.GameObjects.Text(this, 0, 300, `Next wave in: ${this.waveTimer.delay}`, {}).setScrollFactor(0)
     this.add.existing(this.waveText)
-    this.towerBuilder = new TowerBuilder(this, towers)
     this.UI = new UserInterface(this, this.cameras.cameras[0].displayWidth / 2, this.cameras.cameras[0].displayHeight - 50).setScrollFactor(0);
 
     // Camera movement settings
@@ -127,7 +124,15 @@ export default class MainScene extends Phaser.Scene {
               })
 
               if (correct) {
-                this.towerBuilder.placeTower(tiles, this.towers, activeButton);
+                const newTower = new Tower(this, (tiles[0].pixelX + tiles[1].pixelX + tiles[1].width) / 2, (tiles[0].pixelY + tiles[2].pixelY) / 2, activeButton.towerData, tiles)
+                .on('towerDestroy', () => {
+                  this.gold = this.gold + 10;
+                })
+                .on('towerUpdate', () => {
+                  this.gold = this.gold - 10;
+                })
+                this.towers.push(newTower);
+
                 activeButton.deactivate();
                 this.gold = this.gold - 10;
                 this.towerMarker = false;
@@ -153,9 +158,6 @@ export default class MainScene extends Phaser.Scene {
         currentButton.deactivate();
       }
     }) 
-
-    // User interface
-    new UserInterface(this, this.cameras.cameras[0].displayWidth / 2, this.cameras.cameras[0].displayHeight - 50).setScrollFactor(0);
   }
 
   startWave() {
@@ -214,4 +216,3 @@ export default class MainScene extends Phaser.Scene {
     this.waveText.text = `Next wave in: ${Math.round((this.waveTimer.delay - this.waveTimer.getElapsed()) / 1000)}`
   }
 }
-
