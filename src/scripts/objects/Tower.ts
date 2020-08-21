@@ -53,14 +53,21 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
         return enemies.filter((enemy) => this.activeEnemyInRange(enemy))
     }
     
-    getClosestTargetWithMostHealth(enemies: Array<Monster>){
-        const mostHealth = Math.max(...enemies.map(enemy => enemy.monsterData.health))
-        const mostHealthEnemies = enemies.filter((enemy) => {return enemy.monsterData.health == mostHealth})
-        if (mostHealthEnemies.length > 1){
-            return mostHealthEnemies.reduce(
-                (prev, current) => (this.countDistance(prev) > this.countDistance(current)? current: prev))
+    // getClosestTargetWithMostHealth(enemies: Array<Monster>){
+    //     const mostHealth = Math.max(...enemies.map(enemy => enemy.monsterData.health))
+    //     const mostHealthEnemies = enemies.filter((enemy) => {return enemy.monsterData.health == mostHealth})
+    //     if (mostHealthEnemies.length > 1){
+    //         return mostHealthEnemies.reduce(
+    //             (prev, current) => (this.countDistance(prev) > this.countDistance(current)? current: prev))
+    //     }
+    //     return mostHealthEnemies[0]
+    // }
+
+    getClosestTarget(enemies: Array<Monster>){
+        if(enemies.length > 1){
+            return enemies.reduce((prev, next) => (this.countDistance(prev) > this.countDistance(next) ? next: prev));
         }
-        return mostHealthEnemies[0]
+        return enemies[0];
     }
     
     shot(enemy:Monster, bullets: Phaser.GameObjects.Group){
@@ -91,14 +98,14 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
 
     update(time, delta, enemies: Phaser.GameObjects.Group, bullets:  Phaser.GameObjects.Group){
         if(time > this.nextTic) {
-                const currentTarget = this.getCurrentTarget()
+                const currentTarget = this.getCurrentTarget();
                 if(!currentTarget || !this.activeEnemyInRange(currentTarget)){
-                    const reachableEnemies = this.enemiesNearby(enemies.getChildren())
-                    const candidate = this.getClosestTargetWithMostHealth(reachableEnemies)
-                    this.currentTarget(candidate)
+                    const reachableEnemies = this.enemiesNearby(enemies.getChildren());
+                    const candidate = this.getClosestTarget(reachableEnemies);
+                    this.currentTarget(candidate);
                 }
                 else{
-                    this.shot(currentTarget, bullets)
+                    this.shot(currentTarget, bullets);
                 }
             this.nextTic = time + 500;
         }
