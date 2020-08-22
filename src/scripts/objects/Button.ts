@@ -13,6 +13,7 @@ export default class Button extends Phaser.GameObjects.Text{
         })
         this.on('pointerout', () => {
             this.enterButtonRestState();
+            this.emit('rest');
         })
 
         this.on('pointerdown', () =>{

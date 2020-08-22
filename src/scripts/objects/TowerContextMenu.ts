@@ -5,43 +5,50 @@ export default class TowerContextMenu extends Phaser.GameObjects.Container{
     x: integer
     y: integer
     tower: Tower
-    updateTowerBtn: Button
-    destroyTowerBtn: Button
-    hideContextMenuBtn: Button
+    updateTowerBtn: HTMLElement | null
+    destroyTowerBtn: HTMLElement | null
+    hideContextMenuBtn: HTMLElement | null
     text: Phaser.GameObjects.Text
+    containerHTML: HTMLElement 
+    textContainer: HTMLElement | null
     
     constructor(scene, x, y, tower){
         super(scene, x, y);
         this.x = x;
         this.y = y;
         this.tower = tower;
-        this.text = scene.add.text(x, y + 80, 100, 40).setOrigin(0.5);
-        this.updateTowerBtn = new Button(scene, x - 50, y - 40, 'update', {});
-        this.destroyTowerBtn = new Button(scene, x + 50, y - 40, 'destroy', {});
-        this.hideContextMenuBtn = new Button(scene, x + 40, y  - 80, 'X', {});
-
+        this.updateTowerBtn = document.getElementById('contextMenuUpdateButton');
+        this.destroyTowerBtn = document.getElementById('contextMenuDestroyButton');
+        this.hideContextMenuBtn = document.getElementById('contextMenuHideButton');
+        this.textContainer = document.getElementById('damage');
         this.updateText(this.tower.towerData.damage);
-
-        this.updateTowerBtn.on('clicked', () => {
+        
+        this.updateTowerBtn?.addEventListener('click', () => {
             this.updateTower();
             this.updateText(this.tower.towerData.damage);
         });
 
-        this.updateTowerBtn.on('hover', () => {
-            console.log('hoverState');
+        this.updateTowerBtn?.addEventListener('mouseenter', () => {
+            this.updateText(this.tower.towerData.damage, '5');
         })
 
-        this.destroyTowerBtn.on('clicked', () => {
+        this.updateTowerBtn?.addEventListener('mouseleave', () => {
+            this.updateText(this.tower.towerData.damage);
+        })
+
+        this.destroyTowerBtn?.addEventListener('click', () => {
             this.destroyTower();
         });
 
-        this.hideContextMenuBtn.on('clicked', () => {
+        this.hideContextMenuBtn?.addEventListener('click', () => {
             this.hideContextMenu();
         })
     }
 
     updateText(stats: string | number, optional?){
-        this.text.setText(`damage: ${stats}`);
+        if(this.textContainer instanceof HTMLElement){
+            this.textContainer.innerHTML = `damage: ${stats}`
+        }
     }
 
     destroyTower(){
@@ -57,10 +64,7 @@ export default class TowerContextMenu extends Phaser.GameObjects.Container{
     }
 
     hideContextMenu(){
-        this.updateTowerBtn.destroy();
-        this.destroyTowerBtn.destroy();
-        this.hideContextMenuBtn.destroy();
-        this.text.destroy();
+        this.updateText('');
         this.destroy();
         this.tower.hideContextMenu();
     }

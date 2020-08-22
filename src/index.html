@@ -27,6 +27,8 @@
 
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
 
+    <link type="text/html" href="towerContext.css">
+
     <title><%= htmlWebpackPlugin.options.gameName %></title>
     <style>
       html,
@@ -93,5 +95,29 @@
           <p class="modal-card-title">Tower defense</p>
         </footer>
       </div>
+    </div>
+
+    <div id="towerContextMenu" class="card" style="position: fixed; bottom: 10px; left: 10px;">
+      <header class="card-header">
+        <p class="card-header-title">Tower</p>
+        <span class="card-header-icon">
+          <span id="contextMenuHideButton" class="fas fa-times"></span>
+        </span>
+      </header>
+      <div class="card-content">
+       <ul>
+        <li id="damage"></li>
+        <li></li>
+        <li></li>
+       
+       </ul>
+        
+      </div>
+      <div class="card-footer">
+        <button id="contextMenuUpdateButton" class="button is-small card-footer-item">update</button>
+        <button id="contextMenuDestroyButton" class="button is-small is-danger is-light card-footer-item">destroy</button>
+      </div>
+    </div>
+
   </body>
 </html>

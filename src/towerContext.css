@@ -1,0 +1,7 @@
+#towerContextMenu{
+    width: 25%;
+    height: 200px;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+}
