@@ -13,6 +13,7 @@
     <link rel="manifest" href="./manifest.json" />
     <link rel="stylesheet" href="assets/styles/towerListsUI.css">
     <link rel="stylesheet" href="assets/styles/gameInfoUI.css">
+     <link rel="stylesheet" href="assets/styles/towerContextMenu.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
 
     <meta name="mobile-web-app-capable" content="yes" />
@@ -116,6 +117,30 @@
             <li class="gameInfoUI__li"><span  class="fas fa-dollar-sign"></span><span id="goldUI"></span></li>
         </ul>
     </div>
+
+    <div class="towerContextMenu hidden">
+      <div class="towerContextMenu__header">
+        <div class="towerContextMenu__towerName">
+
+        </div>
+        <div id="contextMenuHide" class="towerContextMenu__hide fas fa-times">
+        
+        </div>
+      </div>
+      <div class="towerContextMenu__imageContainer">
+        <img class="towerContextMenu__image" src="" alt="">
+      </div>
+
+      <div class="towerContextMenu__stats">
+        
+      </div>
+
+      <div class="towerContextMenu__buttons"> 
+        <button id="towerUpdate" class="towerContextMenu__buttons towerContextMenu__buttons--update">upgrade</button>
+        <button id="towerDestroy" class="towerContextMenu__buttons towerContextMenu__buttons--destroy">destroy</button>
+      </div>
+    
+    </div> 
 
   </body>
 </html>

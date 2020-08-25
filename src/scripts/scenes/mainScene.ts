@@ -15,6 +15,7 @@ import UserInterface from '../objects/UserInterface';
 import TowerMarker from '../objects/TowerMarker';
 import { NamedModulesPlugin } from 'webpack';
 import CollectionsList from '../objects/CollectionsList';
+import TowerContextMenu from '../objects/TowerContextMenu';
 
 export default class MainScene extends Phaser.Scene {
   fpsText: Phaser.GameObjects.Text
@@ -32,6 +33,7 @@ export default class MainScene extends Phaser.Scene {
   goldText: Phaser.GameObjects.Text
   healthText: Phaser.GameObjects.Text
   UI: CollectionsList
+  towerContextMenu: TowerContextMenu
  
   constructor() {
     super({ key: 'MainScene' })
@@ -74,6 +76,7 @@ export default class MainScene extends Phaser.Scene {
     this.UI = new UserInterface()
     this.UI.setGold(this.gold);
     this.UI.setHealth(this.health);
+    this.towerContextMenu = new TowerContextMenu();
 
 
     // Camera movement settings
@@ -124,6 +127,13 @@ export default class MainScene extends Phaser.Scene {
                 .on('towerUpdate', () => {
                   this.gold = this.gold - 10;
                   this.UI.setGold(this.gold);
+                })
+                .on('towerClicked', (tower) => {
+                  this.towerContextMenu.changeTower(tower);
+                  this.towerContextMenu.setVisible();
+                  this.towerContextMenu.updateText('hello');
+                  this.towerContextMenu.setTowerName();
+                  this.towerContextMenu.setImage();
                 })
                 this.towers.push(newTower);
 
