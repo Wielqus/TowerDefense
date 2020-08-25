@@ -11,6 +11,8 @@
     <meta name="theme-color" content="#000000" />
 
     <link rel="manifest" href="./manifest.json" />
+    <link rel="stylesheet" href="assets/styles/towerListsUI.css">
+    <link rel="stylesheet" href="assets/styles/gameInfoUI.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
 
     <meta name="mobile-web-app-capable" content="yes" />
@@ -26,8 +28,7 @@
     <link rel="apple-touch-icon" type="image/png" sizes="512x512" href="./icons/icons-512.png" />
 
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
-
-    <link type="text/html" href="towerContext.css">
+    <script src="https://kit.fontawesome.com/82df8fcdd8.js" crossorigin="anonymous"></script>
 
     <title><%= htmlWebpackPlugin.options.gameName %></title>
     <style>
@@ -97,26 +98,23 @@
       </div>
     </div>
 
-    <div id="towerContextMenu" class="card" style="position: fixed; bottom: 10px; left: 10px;">
-      <header class="card-header">
-        <p class="card-header-title">Tower</p>
-        <span class="card-header-icon">
-          <span id="contextMenuHideButton" class="fas fa-times"></span>
-        </span>
-      </header>
-      <div class="card-content">
-       <ul>
-        <li id="damage"></li>
-        <li></li>
-        <li></li>
-       
-       </ul>
-        
-      </div>
-      <div class="card-footer">
-        <button id="contextMenuUpdateButton" class="button is-small card-footer-item">update</button>
-        <button id="contextMenuDestroyButton" class="button is-small is-danger is-light card-footer-item">destroy</button>
-      </div>
+
+
+
+     <button id="buildButton"><span class="fas fa-hammer buildButton__hammer"></span><span class="fas fa-times buildButton__times"></span></button>
+
+    <div class="towerList">
+        <ul class="towerList__ul">
+           
+        </ul>
+    </div>
+
+    <div class="gameInfoUI">
+        <ul class="gameInfoUI__ul">
+            <li class="gameInfoUI__li"><span  class="fas fa-heart"></span><span id="healthUI"></span></li>
+            <li class="gameInfoUI__li"><span  class="fas fa-shield-alt"></span><span id="waveUI"></span></li>
+            <li class="gameInfoUI__li"><span  class="fas fa-dollar-sign"></span><span id="goldUI"></span></li>
+        </ul>
     </div>
 
   </body>

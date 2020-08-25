@@ -1,63 +1,50 @@
-import { GridSizer } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
-import RoundRectangle from 'phaser3-rex-plugins/plugins/roundrectangle.js';
 import { towers } from '../../collections/Towers';
 import TowerButton from './TowerButton';
 
-export default class CollectionsList extends GridSizer{
-    [x: string]: any
+export default class CollectionsList{
     scene: Phaser.Scene
     activeButton: TowerButton| null
+    buildingButton: HTMLElement| null
+    gameParams: any
 
-    constructor(scene, x: number, y: number) {
-        super(scene, x, y, {
-            column: 3,
-            row: 1,
-            width: scene.cameras.cameras[0].displayWidth,
-            space: {
-                     left: 5, right: 5, top: 5, bottom:5,
-                     column: 10,
-                     row: 10     
-                 },
-                 columnProportions: 1,
-                 rowProportions: 0,
-        }),
-        this.towerButtons = []
+
+    constructor() {
         this.activeButton = null;
-        this.scene = scene;
-        scene.add.existing(this);
-        this.create();
-    }
-    
-    create(){
-        this.height = 100;
-        this.setDepth(1);
-        const background = new RoundRectangle(this.scene, this.x, this.y, this.width, this.height, 5, 0x000000);
-        background.setAlpha(0.3);
-        this.scene.add.existing(background);
-        this.addBackground(background);
-        this._createTowersButtons();
-        this.layout();
+        this.addPointersToGameParams();
+        this.addClickHandlerToBuildingButton();
+        this.createButtons();
     }
 
-    _createTowersButtons(){
-        Array.from(Object.entries(towers)).forEach((tower) => {
-            let button = new TowerButton(this.scene, 0, 0, tower[1], this);
-            const container = this.scene.add.container(0, 0);
-            container.setSize(32, 32);
-            const text = this.scene.add.text(container.width /2, container.height/2, `${tower[1].name}`);
-            container.add(text);
-            container.addAt(button);
-            this.add(container, {
-                align: 'left'
-            });
-        });
+    addPointersToGameParams(){
+        this.gameParams = {
+            gold: document.getElementById('goldUI'),
+            wave: document.getElementById('waveUI'),
+            health: document.getElementById('healthUI'),
+        }
+    }
+
+    addClickHandlerToBuildingButton(){
+        let towerList = document.querySelector('.towerList');
+
+        this.buildingButton = document.getElementById('buildButton');
+        this.buildingButton?.addEventListener('click', () => {
+          this.buildingButton?.classList.toggle('active');
+          towerList?.classList.toggle('active');
+        })
+    }
+
+    createButtons(){
+        Object.keys(towers).forEach(tower => {
+            new TowerButton(towers[tower], this)
+        })
     }
 
     addActiveButton(subject:TowerButton){
-        if(this.activeButton instanceof TowerButton && (JSON.stringify(subject) !== JSON.stringify(this.activeButton))){
-            this.activeButton.deactivate();
-        }
         this.activeButton = subject;
+    }
+
+    removeActiveButton(){
+        this.activeButton = null
     }
 
     getActiveButton(){
@@ -65,5 +52,17 @@ export default class CollectionsList extends GridSizer{
             return this.activeButton;
         }
         return false;
+    }
+
+    setGold(price){
+        this.gameParams.gold.textContent = String(price);
+    }
+
+    setHealth(hp){
+        this.gameParams.health.textContent = String(hp);
+    }
+
+    setWave(wave){
+        this.gameParams.wave.textContent = String(wave);
     }
 }

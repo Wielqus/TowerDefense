@@ -32,7 +32,7 @@ export default class MainScene extends Phaser.Scene {
   goldText: Phaser.GameObjects.Text
   healthText: Phaser.GameObjects.Text
   UI: CollectionsList
-
+ 
   constructor() {
     super({ key: 'MainScene' })
     this.debug = new Debug(this)
@@ -71,12 +71,10 @@ export default class MainScene extends Phaser.Scene {
     this.towers = []
     this.gold = 500;
     this.health = 100;
-    this.healthText= new Phaser.GameObjects.Text(this, 0, 200, `HP :${this.health}`, {}).setScrollFactor(0)
-    this.add.existing(this.healthText)
-    this.goldText= new Phaser.GameObjects.Text(this, 0, 250, `GOLD :${this.gold}`, {}).setScrollFactor(0)
-    this.add.existing(this.goldText)
-    this.UI = new UserInterface(this, this.cameras.cameras[0].displayWidth / 2, this.cameras.cameras[0].displayHeight - 50).setScrollFactor(0);
-    
+    this.UI = new UserInterface()
+    this.UI.setGold(this.gold);
+    this.UI.setHealth(this.health);
+
 
     // Camera movement settings
     const controlConfig = {
@@ -92,12 +90,14 @@ export default class MainScene extends Phaser.Scene {
     this.waveCreator = new WaveCreator(this, this.map, this.cameras.cameras[0].displayWidth - 200, 100)
     this.waveCreator.on('monsterFinish', (monster) => {
       this.health = this.health - 10
+      this.UI.setHealth(this.health)
       if(this.health <= 0){
         this.game.events.emit('finish')
       }
     })
     this.waveCreator.on('monsterDeath', (monster) => {
       this.gold = this.gold + 10
+      this.UI.setGold(this.gold);
     })
     
 
@@ -119,14 +119,17 @@ export default class MainScene extends Phaser.Scene {
                 const newTower = new Tower(this, (tiles[0].pixelX + tiles[1].pixelX + tiles[1].width) / 2, (tiles[0].pixelY + tiles[2].pixelY) / 2, activeButton.towerData, tiles)
                 .on('towerDestroy', () => {
                   this.gold = this.gold + 10;
+                  this.UI.setGold(this.gold);
                 })
                 .on('towerUpdate', () => {
                   this.gold = this.gold - 10;
+                  this.UI.setGold(this.gold);
                 })
                 this.towers.push(newTower);
 
                 activeButton.deactivate();
                 this.gold = this.gold - 10;
+                this.UI.setGold(this.gold);
                 this.towerMarker = false;
                 
                 tiles.forEach(tile => {
@@ -161,7 +164,5 @@ export default class MainScene extends Phaser.Scene {
     if (this.towers.length > 0 && this.waveCreator.active_monsters.getLength() > 0) {
       this.towers.forEach(tower => {tower.update(time, delta, this.waveCreator.active_monsters, this.bullets) })
     }
-    this.healthText.text = `HP: ${this.health}`
-    this.goldText.text = `GOLD: ${this.gold}`
 }
 }

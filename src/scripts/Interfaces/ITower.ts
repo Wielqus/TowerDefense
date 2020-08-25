@@ -5,6 +5,7 @@ export default interface ITower{
     range: integer,
     damage: integer,
     source: string,
+    price: integer,
     width: integer,
     height: integer,
     bullet: IBullet,
