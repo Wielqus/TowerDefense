@@ -14,7 +14,6 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
     nextTic: number
     _currentTarget: Monster
     tiles: Array<Tilemaps.Tile>
-    currentlyActiveMenu: boolean
 
     constructor(scene: Phaser.Scene, x:integer, y:integer, towerData: ITower, tiles: Array<Tilemaps.Tile>) {
         super(scene, x, y, towerData.name)
@@ -24,7 +23,6 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
         this.y = y;
         this.tiles = tiles;
         this.nextTic = 0;
-        this.currentlyActiveMenu = false;
         scene.add.existing(this);
         this.activateInteractions();
     }
@@ -39,6 +37,7 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
     
     drawRange(scene:Phaser.Scene){
        this.rangeCricle =  scene.add.circle(this.x, this.y, this.towerData.range, 0, 0.2)
+       this.rangeCricle.setStrokeStyle(2, 0x40ff00); //green
     }
     
     activeEnemyInRange(enemy: Monster){
@@ -77,22 +76,9 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
     
     activateInteractions(){
         this.setInteractive({useHandCursor: true})
-        this.on('pointerover', () => {
-            if(!this.rangeCricle){
-                this.drawRange(this.scene)
-            }else{
-                this.rangeCricle.setVisible(true)
-            }
-        })
-        this.on('pointerout', () =>{
-            this.rangeCricle.setVisible(false)
-        })
-
         this.on('pointerdown', () => {
-            if(!this.currentlyActiveMenu){
-                new TowerContextMenu(this.scene, this.x, this.y, this);
-                this.currentlyActiveMenu = true;
-            }
+            this.drawRange(this.scene)
+            this.emit('towerClicked', this);
         })
     }
 
@@ -111,13 +97,14 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
         }
     }
 
-    hideContextMenu(){
-        this.currentlyActiveMenu = false;
-    }
-
     tearDown(){
+        this.rangeCricle.destroy();
         this.clearTiles();
         this.destroy();
+    }
+
+    hideRangeCircle(){
+        this.rangeCricle.destroy();
     }
 
     clearTiles(){

@@ -1,0 +1,45 @@
+.gameInfoUI{
+    position: fixed;
+    left: 20px;
+    top: 30px;
+    box-sizing: border-box;
+}
+
+.gameInfoUI__ul {
+    width: 100%;
+    list-style: none;
+}
+
+.gameInfoUI__li {
+    margin: 5px;
+    padding: 10px;
+    height: 50px;
+    background-color: #fff;
+    box-sizing: border-box;
+    -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+}
+
+.gameInfoUI__li span:nth-child(1){
+    border-right: 1px solid #262626;
+    width: 30px;
+    display: inline-block;
+    text-align: center;
+}
+
+.gameInfoUI__li span:nth-child(2){
+    padding: 5px;
+    display: inline-block
+}
+
+.gameInfoUI .fa-heart{
+    color: red;
+}
+
+.gameInfoUI .fa-shield-alt{
+    color: blue;
+}
+.gameInfoUI .fa-dollar-sign{
+    color: goldenrod;
+}

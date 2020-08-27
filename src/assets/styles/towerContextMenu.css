@@ -1,0 +1,78 @@
+.towerContextMenu{
+    position: fixed;
+    bottom: 250px;
+    left: 50px;
+    width: 200px;
+    height: 200px;
+    transform: translateX(0);
+    transition-duration: 0.5s;
+}
+
+.towerContextMenu.hidden{
+    transform: translateX(-100vh);
+}
+
+.towerContextMenu__header{
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+
+.towerContextMenu__towerName{
+    font-size: 1.2rem;
+}
+
+.towerContextMenu__hide{
+    font-size: 1.2rem;
+    color: gray;
+    transition: .3s;
+    cursor: pointer;
+}
+
+.towerContextMenu__hide:hover{
+    color: black;
+}
+
+.towerContextMenu__imageContainer{
+    padding: 10px;
+    background-color: rgba(0,0,0, 0.5);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.towerContextMenu__stats{
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    background-color: gray;
+    color: white;
+}
+
+.towerContextMenu__buttons{
+    display: flex;
+    justify-content: space-around;
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: #fff;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.towerContextMenu__buttons--update{
+    border: 1px solid gray;
+    background-color: transparent;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.towerContextMenu__buttons--destroy{
+    border: 1px solid red;
+    background-color: salmon;
+    padding: 10px;
+    cursor: pointer;
+}

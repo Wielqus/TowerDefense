@@ -1,5 +1,6 @@
 import 'phaser'
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
+import SceneWatcherPlugin from 'phaser-plugin-scene-watcher';
 import MainScene from './scenes/MainScene'
 import PreloadScene from './scenes/preloadScene'
 import MenuScene from './scenes/menuScene';
