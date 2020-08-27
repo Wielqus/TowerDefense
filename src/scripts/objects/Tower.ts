@@ -81,7 +81,6 @@ export default class Tower extends Phaser.Physics.Arcade.Image {
                 this.drawRange(this.scene)
             }else{
                 this.rangeCricle.setVisible(true)
-                console.log(this.rangeCricle.visible)
             }
             this.emit('towerClicked', this);
         })

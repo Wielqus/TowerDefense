@@ -125,7 +125,7 @@ export default class MainScene extends Phaser.Scene {
                   this.UI.setGold(this.gold);
                 })
                 .on('towerUpdate', () => {
-                  this.gold = this.gold - 10;
+                  this.gold = this.gold - newTower.towerData.price;
                   this.UI.setGold(this.gold);
                 })
                 .on('towerClicked', (tower) => {
@@ -138,7 +138,7 @@ export default class MainScene extends Phaser.Scene {
                 this.towers.push(newTower);
 
                 activeButton.deactivate();
-                this.gold = this.gold - 10;
+                this.gold = this.gold - newTower.towerData.price;
                 this.UI.setGold(this.gold);
                 this.towerMarker = false;
                 

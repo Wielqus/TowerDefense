@@ -27,15 +27,15 @@ export default class TowerContextMenu{
         
         this.updateTowerBtn?.addEventListener('click', () => {
             this.updateTower();
-            this.updateText(this.tower.towerData.damage);
+            this.updateText();
         });
 
         this.updateTowerBtn?.addEventListener('mouseenter', () => {
-            this.updateText(this.tower.towerData.damage, '5');
+            this.updateText();
         })
 
         this.updateTowerBtn?.addEventListener('mouseleave', () => {
-            this.updateText(this.tower.towerData.damage);
+            this.updateText();
         })
 
         this.destroyTowerBtn?.addEventListener('click', () => {
@@ -47,14 +47,18 @@ export default class TowerContextMenu{
         })
     }
 
-    updateText(stats: string | number, optional?){
+    updateText(){
         if(this.textContainer instanceof HTMLElement){
             this.textContainer.innerHTML = '';
-            [this.tower.towerData.damage, this.tower.towerData.range].forEach((param)=> {
-                let p = document.createElement('p');
-                p.textContent = `damage: ${param}`;
-                this.textContainer?.appendChild(p);
-            })
+            
+            Object.entries(
+                {damage: this.tower.towerData.damage, 
+                range: this.tower.towerData.range})
+                .forEach((key) => {
+                    let p = document.createElement('p');
+                    p.textContent = `${key.join(': ')}`;
+                    this.textContainer?.appendChild(p);
+            });
         }
     }
 
@@ -78,7 +82,7 @@ export default class TowerContextMenu{
 
     updateTower(){
         this.tower.towerData.damage += 5;
-        this.updateText(this.tower.towerData.damage);
+        this.updateText();
         this.tower.emit('towerUpdate');
     }
 
@@ -88,7 +92,18 @@ export default class TowerContextMenu{
     }
 
     changeTower(nextTower:Tower){
+        if(this.tower){
+            this.tower.hideRangeCircle();
+        }
         this.tower = nextTower;
+        this.updateText();
+        this.setTowerName();
+        this.setImage();
+        this.isVisible() ? null : this.setVisible();
+    }
+
+    isVisible(){
+        return !this.containerHTML?.classList.contains('hidden')
     }
 
     setVisible(){
