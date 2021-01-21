@@ -521,6 +521,13 @@ ul.rpgui-dropdown-imp {
 .rpgui-icon.empty-slot {
   background-image: url("img/icons/empty-slot.png"); }
 
+.rpgui-icon.heart {
+    background-image: url("img/icons/heart.png"); }
+
+.rpgui-icon.coin {
+     background-image: url("img/icons/coin.png"); }
+  
+
 /**
 * input styling
 */
