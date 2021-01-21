@@ -12,16 +12,18 @@ export default class WafeManger{
     emitter: EventDispatcher
     waves: Array<Array<IMonster>>
     map: Map
+    activeMonsters: Array<{"monster": Monster, "key": integer}>
 
     constructor(scene: Scene, waves: Array<Array<IMonster>>, map: Map){
-        this.round = 1;
+        this.round = 0;
         this.time = 15;
         this.scene = scene
         this.waves = waves
         this.map = map
         this.emitter = EventDispatcher.getInstance();
         this.emitter.on('stop_counting', this.stopCounting, this)
-        this.startCounting()
+        this.start()
+        this.activeMonsters = [];
     }
 
     startCounting(){
@@ -52,15 +54,41 @@ export default class WafeManger{
     startWave(){
         const wave = this.waves.pop()
         if (wave) {
-            wave.forEach((monster) => {
+            wave.forEach((monster, key) => {
                 
                 setTimeout(() => {
                     const monsterInstance = new Monster(this.scene, this.map.getRandomPath(), monster).on("finish", () => {
                         this.emitter.emit('monsterFinished', monster)
+                        const index = this.activeMonsters.findIndex(monster => {
+                            monster.key === key
+                        })
+                        if(index){
+                            this.activeMonsters.splice(index, 1)
+                        }
+                        if(this.activeMonsters.length === 0){
+                            this.start()
+                        }
+                      })
+                      this.activeMonsters.push({
+                          "monster": monsterInstance,
+                          "key": key,
                       })
                 }, Math.random() * 5000)
             })
         }
+    }
+
+    start(){
+        if(this.waves.length){
+            this.time = 15
+            this.round = this.round + 1
+            this.startCounting()
+            this.emitter.emit("startNewWave")
+        }else{
+            this.emitter.emit("win")
+            console.log("win")
+        }
+        
     }
 
 }

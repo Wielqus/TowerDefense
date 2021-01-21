@@ -46,6 +46,7 @@ window.addEventListener('load', () => {
   const startNowButton: HTMLButtonElement | null = document.querySelector('#start-now-button')
   const healthDiffrenceText: HTMLElement | null = document.querySelector("#health-diffrence-text")
   const healthText: HTMLElement | null = document.querySelector('#health-text')
+  const roundInfoContainer: HTMLElement | null = document.querySelector('#round-info-container')
   const emitter = EventDispatcher.getInstance()
   let textTimer: any
 
@@ -59,7 +60,6 @@ window.addEventListener('load', () => {
   
   startNowButton?.addEventListener('click', () => {
     emitter.emit('stop_counting')
-    startNowButton.disabled = true
   })
 
   emitter.on('changeHealth', (actualHealth: integer, previousHealth: integer) => {
@@ -84,13 +84,21 @@ window.addEventListener('load', () => {
     
   })
 
+  emitter.on('startNewWave', () => {
+    if(roundInfoContainer){
+      roundInfoContainer.classList.remove('hide-transition')
+      roundInfoContainer.classList.add('show-transition')
+    }
+  })
+
   emitter.on('change_time', (time, round) => {
     if(secondsToStartText && roundText){
       secondsToStartText.textContent = time
       roundText.textContent = round
     }
-    if(time === 0 && startNowButton){
-      startNowButton.disabled = true
+    if(time === 0 && roundInfoContainer){
+      roundInfoContainer.classList.remove('show-transition')
+      roundInfoContainer.classList.add('hide-transition')
     }
   })
 
