@@ -5,6 +5,7 @@ import MainScene from './scenes/MainScene'
 import PreloadScene from './scenes/preloadScene'
 import MenuScene from './scenes/menuScene';
 import { maps } from '../collections/Maps';
+import EventDispatcher from './EventDispatcher'
 
 const DEFAULT_WIDTH: number = window.innerWidth
 const DEFAULT_HEIGHT: number = window.innerHeight
@@ -39,6 +40,11 @@ window.addEventListener('load', () => {
   const exitButton: HTMLElement | null = document.querySelector('#exitButton')
   const pauseModal: HTMLElement | null = document.querySelector('#pauseModal')
   const mapSelect: HTMLSelectElement | null = document.querySelector('#map-select')
+  const gameContainers: Array<HTMLSelectElement> | null = Array.from(document.querySelectorAll('.game-container'))
+  const secondsToStartText: HTMLElement | null = document.querySelector('#seconds-to-start-text')
+  const roundText: HTMLElement | null = document.querySelector('#round-text')
+  const startNowButton: HTMLButtonElement | null = document.querySelector('#start-now-button')
+  const emitter = EventDispatcher.getInstance()
 
   /*
   if(startGame){
@@ -47,6 +53,18 @@ window.addEventListener('load', () => {
   game.scene.start('MainScene', {map: maps[0]})
   */
 
+  startNowButton?.addEventListener('click', () => {
+    emitter.emit('stop_counting')
+    startNowButton.disabled = true
+  })
+
+  emitter.on('change_time', (time, round) => {
+    if(secondsToStartText && roundText){
+      secondsToStartText.textContent = time
+      roundText.textContent = round
+    }
+  })
+
 
   startGame?.addEventListener('click', () => {
     if(startGameContainer){
@@ -54,6 +72,9 @@ window.addEventListener('load', () => {
     }
     if(mapSelect){
       game.scene.start('MainScene', {map: maps[mapSelect.value]})
+      gameContainers.forEach(container => {
+        container.style.display = "flex"
+      })
     }
     
   })

@@ -53,12 +53,9 @@
     </script> -->
 </head>
 
-<body>
+<body class="flex justify-center">
 
   <div id="start-game-container" class="rpgui-content rpgui-cursor-default ">
-    <p style="position:fixed; right:0px; bottom:0px;">This example shows all the key elements of RPGUI.<br>You might
-      need to zoom-out a little to view all.</p>
-
 
     <!-- Dropdown and list -->
     <div class="rpgui-container framed container container mx-auto w-full h-full" data-rpguitype="draggable"
@@ -104,10 +101,12 @@
       </div>
     </div>
 
+    <div style="display:none;" class="rpgui-content rpgui-container self-center framed  flex flex-col w-80 h-40 justify-center game-container">
+        <h4 >Round <b id="round-text">1</b> start in <b id="seconds-to-start-text">15</b></h4>
+        <button id="start-now-button" class="rpgui-button"  type="button"><p>Start now</p></button>
+    </div>
 
 
-
-  </div>
 
 </body>
 
