@@ -63,6 +63,10 @@ window.addEventListener('load', () => {
       secondsToStartText.textContent = time
       roundText.textContent = round
     }
+    console.log(time)
+    if(time === 0 && startNowButton){
+      startNowButton.disabled = true
+    }
   })
 
 
