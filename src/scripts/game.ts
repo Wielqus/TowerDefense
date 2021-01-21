@@ -66,12 +66,14 @@ window.addEventListener('load', () => {
     if(healthDiffrenceText){
       const diffrence = (actualHealth - previousHealth)
       if(diffrence){
+        healthDiffrenceText.classList.remove('hide-transition')
         healthDiffrenceText.classList.add('show-transition');
         healthDiffrenceText.textContent = diffrence.toString()
         window.clearTimeout(textTimer)
         textTimer = window.setTimeout(() => {
           healthDiffrenceText.classList.remove('show-transition')
-        }, 3000);
+          healthDiffrenceText.classList.add('hide-transition');
+        }, 1000);
       }
       if(healthText){
         healthText.textContent = actualHealth.toString()
