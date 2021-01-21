@@ -1,146 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
-    />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <meta name="theme-color" content="#000000" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <link rel="manifest" href="./manifest.json" />
-    <link rel="stylesheet" href="assets/styles/towerListsUI.css">
-    <link rel="stylesheet" href="assets/styles/gameInfoUI.css">
-     <link rel="stylesheet" href="assets/styles/towerContextMenu.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+  <meta name="theme-color" content="#000000" />
 
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="application-name" content="<%= htmlWebpackPlugin.options.gameName %>" />
-    <meta name="apple-mobile-web-app-title" content="<%= htmlWebpackPlugin.options.gameName %>" />
-    <meta name="msapplication-starturl" content="./" />
+  <link rel="manifest" href="./manifest.json" />
 
-    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icons-192.png" />
-    <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="./icons/icons-192.png" />
+  <link rel="stylesheet" href="assets/styles/rpgui.css">
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 
-    <link rel="icon" type="image/png" sizes="512x512" href="./icons/icons-512.png" />
-    <link rel="apple-touch-icon" type="image/png" sizes="512x512" href="./icons/icons-512.png" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="<%= htmlWebpackPlugin.options.gameName %>" />
+  <meta name="apple-mobile-web-app-title" content="<%= htmlWebpackPlugin.options.gameName %>" />
+  <meta name="msapplication-starturl" content="./" />
 
-    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
-    <script src="https://kit.fontawesome.com/82df8fcdd8.js" crossorigin="anonymous"></script>
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icons-192.png" />
+  <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="./icons/icons-192.png" />
 
-    <title><%= htmlWebpackPlugin.options.gameName %></title>
-    <style>
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        background-color: #000000;
-      }
-    </style>
+  <link rel="icon" type="image/png" sizes="512x512" href="./icons/icons-512.png" />
+  <link rel="apple-touch-icon" type="image/png" sizes="512x512" href="./icons/icons-512.png" />
 
-    <noscript>Please enable javascript to continue using this application.</noscript>
+  <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+  <script src="https://kit.fontawesome.com/82df8fcdd8.js" crossorigin="anonymous"></script>
 
-    <!-- installs the serviceWorker -->
-    <!-- <script>
+  <title>
+    <%= htmlWebpackPlugin.options.gameName %>
+  </title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background-color: #000000;
+    }
+  </style>
+
+  <noscript>Please enable javascript to continue using this application.</noscript>
+
+  <!-- installs the serviceWorker -->
+  <!-- <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('./sw.js')
         })
       }
     </script> -->
-  </head>
-  <body>
-    <nav style="background-color: transparent;" class="navbar is-transparent is-fixed-top" role="navigation" aria-label="main navigation">
-    
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              <a style="display:none;" id="pauseButton" class="button is-primary">
-                <strong>Menu</strong>
-              </a>
+</head>
+
+<body>
+
+  <div id="start-game-container" class="rpgui-content rpgui-cursor-default ">
+    <p style="position:fixed; right:0px; bottom:0px;">This example shows all the key elements of RPGUI.<br>You might
+      need to zoom-out a little to view all.</p>
+
+
+    <!-- Dropdown and list -->
+    <div class="rpgui-container framed container container mx-auto w-full h-full" data-rpguitype="draggable"
+      draggable="false">
+      <h1>Tower Defense</h1>
+      <hr>
+
+
+      <div class="grid grid-cols-2 gap-4 w-full h-full">
+
+        <div>
+          <label>Select map:</label>
+          <select id="map-select" class="rpgui-list h-full" id="background-select" size="4" data-rpguitype="list" style="display: none;">
+            <option value="0" selected>Mapa 1</option>
+            <option value="1">Mapa 2</option>
+          </select>
+        </div>
+        <div>
+          <div class="grid grid-rows-2 gap-4 w-full h-full">
+            <div>
+              <div class="rpgui-container framed-grey w-full h-full"  >
+                <div class="w-full h-full bg-center bg-no-repeat bg-cover" style="background-image: url('assets/styles/img/Kreta3.png');">
+
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="flex flex-col flex-initial h-full ">
+                <div>
+                  <h1>Test</h1>
+                  <p class="p-3">Test Test Test Test Test Test Test Test Test Test Test </p>
+                </div>
+                <hr>
+                <div class="align-self-end"></div>
+                  <button class="rpgui-button self-end " id="start-game" type="button"><p>Start game</p></button>
+                </div>
+              </div>
+              
             </div>
           </div>
         </div>
-    </nav>
-    <div id="phaser-game"></div>
-    <div id="start-game" style=" background-color:aliceblue; width: 100vw; height: 100vh;z-index: 2; position: absolute; top:0px; left: 0px;display:flex; justify-content: center;align-items: center;">
-      <main class="box " style="width: 50vw; height: 50vh;">
-      <header><h1 class="title ">Tower defense</h1></header>
-      <nav class="menu has-text-centered">
-        <ul class="menu-list">
-          <li><a class="mapButton" data-index="0">Mapa 1</a></li>
-          <li><a class="mapButton" data-index="1">Mapa 2</a></li>
-        </ul>
-      </nav>
-    </main>
-    </div>
 
-    <div id="pauseModal" class="modal has-text-centered">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Menu</p>
-        </header>
-        <section class="modal-card-body">
-          <nav class="menu has-text-centered">
-            <ul class="menu-list">
-              <li><a id="resumeButton">Resume</a></li>
-              <li><a id="restartButton">Restart</a></li>
-              <li><a id="exitButton">Exit</a></li>
-            </ul>
-          </nav>
-        </section>
-        <footer class="modal-card-foot has-text-centered">
-          <p class="modal-card-title">Tower defense</p>
-        </footer>
       </div>
     </div>
 
 
 
 
-     <button id="buildButton"><span class="fas fa-hammer buildButton__hammer"></span><span class="fas fa-times buildButton__times"></span></button>
+  </div>
 
-    <div class="towerList">
-        <ul class="towerList__ul">
-           
-        </ul>
-    </div>
+</body>
 
-    <div class="gameInfoUI">
-        <ul class="gameInfoUI__ul">
-            <li class="gameInfoUI__li"><span  class="fas fa-heart"></span><span id="healthUI"></span></li>
-            <li class="gameInfoUI__li"><span  class="fas fa-shield-alt"></span><span id="waveUI"></span></li>
-            <li class="gameInfoUI__li"><span  class="fas fa-dollar-sign"></span><span id="goldUI"></span></li>
-        </ul>
-    </div>
-
-    <div class="towerContextMenu hidden">
-      <div class="towerContextMenu__header">
-        <div class="towerContextMenu__towerName">
-
-        </div>
-        <div id="contextMenuHide" class="towerContextMenu__hide fas fa-times">
-        
-        </div>
-      </div>
-      <div class="towerContextMenu__imageContainer">
-        <img class="towerContextMenu__image" src="" alt="">
-      </div>
-
-      <div class="towerContextMenu__stats">
-        
-      </div>
-
-      <div class="towerContextMenu__buttons"> 
-        <button id="towerUpdate" class="towerContextMenu__buttons towerContextMenu__buttons--update">upgrade</button>
-        <button id="towerDestroy" class="towerContextMenu__buttons towerContextMenu__buttons--destroy">destroy</button>
-      </div>
-    
-    </div> 
-
-  </body>
 </html>
+
+<script src="assets/scripts/rpgui.js"></script>

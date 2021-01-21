@@ -6,8 +6,8 @@ import PreloadScene from './scenes/preloadScene'
 import MenuScene from './scenes/menuScene';
 import { maps } from '../collections/Maps';
 
-const DEFAULT_WIDTH = window.innerWidth
-const DEFAULT_HEIGHT = window.innerHeight
+const DEFAULT_WIDTH: number = window.innerWidth
+const DEFAULT_HEIGHT: number = window.innerHeight
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -30,6 +30,7 @@ const config: Phaser.Types.Core.GameConfig = {
 
 window.addEventListener('load', () => {
   const startGame: HTMLElement | null = document.querySelector('#start-game')
+  const startGameContainer: HTMLElement | null = document.querySelector('#start-game-container')
   const game: Phaser.Game = new Phaser.Game(config)
   const mapButtons: Array<HTMLElement>  = Array.from(document.querySelectorAll('.mapButton'))
   const pauseButton: HTMLElement | null = document.querySelector('#pauseButton')
@@ -37,6 +38,25 @@ window.addEventListener('load', () => {
   const restartButton: HTMLElement | null = document.querySelector('#restartButton')
   const exitButton: HTMLElement | null = document.querySelector('#exitButton')
   const pauseModal: HTMLElement | null = document.querySelector('#pauseModal')
+  const mapSelect: HTMLSelectElement | null = document.querySelector('#map-select')
+
+  /*
+  if(startGame){
+    startGame.style.display = "none";
+  }
+  game.scene.start('MainScene', {map: maps[0]})
+  */
+
+
+  startGame?.addEventListener('click', () => {
+    if(startGameContainer){
+      startGameContainer.style.display = "none";
+    }
+    if(mapSelect){
+      game.scene.start('MainScene', {map: maps[mapSelect.value]})
+    }
+    
+  })
 
   game.events.on('finish', () => {
     if(startGame){

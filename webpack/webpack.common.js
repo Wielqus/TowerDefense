@@ -14,7 +14,19 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js']
   },
   module: {
-    rules: [{ test: /\.tsx?$/, include: path.join(__dirname, '../src'), loader: 'ts-loader' }]
+    rules: [{ test: /\.tsx?$/, include: path.join(__dirname, '../src'), loader: 'ts-loader' }],
+    /*
+    rules: [
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+          },
+        ],
+      },
+    ],
+    */
   },
   optimization: {
     splitChunks: {
@@ -32,7 +44,8 @@ module.exports = {
     new HtmlWebpackPlugin({ gameName: 'My Phaser Game', template: 'src/index.html' }),
     new CopyWebpackPlugin([
       { from: 'src/assets', to: 'assets' },
-      { from: 'src/favicon.ico', to: '' }
+      { from: 'src/favicon.ico', to: '' },
+      {from:'src/assets/styles/img',to:'assets/styles/img'} 
     ]),
   ]
 }

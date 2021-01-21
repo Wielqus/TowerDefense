@@ -1,5 +1,7 @@
 import IMap from '../Interfaces/IMap';
 import { Tilemaps } from 'phaser';
+import EventDispatcher from '../EventDispatcher'
+import MapDebug from './MapDebug'
 var easystarjs = require('easystarjs');
 
 export default class Map {
@@ -14,6 +16,8 @@ export default class Map {
   startTiles: Array<Tilemaps.Tile>
   finishTiles: Array<Tilemaps.Tile>
   pathTiles: Array<Tilemaps.Tile>
+  emitter: EventDispatcher
+  mapDebug: MapDebug
 
 
   constructor(scene: Phaser.Scene, mapData: IMap) {
@@ -22,6 +26,10 @@ export default class Map {
     this.pathFinder = new easystarjs.js();
     this.pathFinder.enableSync();
     this.paths = []
+    this.emitter=EventDispatcher.getInstance();
+    this.emitter.on('main_scene_preload', this.preload.bind(this));
+    this.emitter.on('main_scene_create', this.create.bind(this));
+    this.emitter.on('main_scene_update', this.update.bind(this));
   }
 
 
@@ -49,6 +57,12 @@ export default class Map {
     this.loadTiles()
     this.findPath(tileSets)
     this.map.setLayer("Top")
+    
+    if(this.scene.game.config.physics.arcade?.debug){
+      this.mapDebug = new MapDebug(this.scene, this.map, this.paths)
+      this.mapDebug.debugOn()
+    }
+    
   }
 
   loadTiles() {
@@ -142,61 +156,6 @@ export default class Map {
     return this.paths[Math.floor(Math.random() * this.paths.length)]
   }
 
-  debugOn() {
-    this.drawPaths()
-    this.overlayFields()
-  }
-
-  debugOff() {
-    this.graphics.clear();
-  }
-
-  overlayFields() {
-    this.map.setLayer("Top")
-    this.map.forEachTile(tile => {
-      let rect = new Phaser.Geom.Rectangle(tile.pixelX, tile.pixelY, tile.width, tile.height)
-      this.graphics.lineStyle(1, 0x00000, 0.5)
-      this.graphics.strokeRectShape(rect);
-      if (tile.properties.start) {
-        this.graphics.fillStyle(0x00FF00, 0.3)
-        this.graphics.fillRectShape(rect);
-      }
-      else if (tile.properties.path) {
-        this.graphics.fillStyle(0xFFFF00, 0.3)
-        this.graphics.fillRectShape(rect);
-      }
-      else if (tile.properties.meta) {
-        this.graphics.fillStyle(0xFF0000, 0.3)
-        this.graphics.fillRectShape(rect);
-      }
-      else if (tile.properties.towerPlace) {
-        this.graphics.fillStyle(0xEE82EE, 0.3)
-        this.graphics.fillRectShape(rect);
-      }
-    })
-  }
-
-  drawPaths() {
-    this.graphics.clear();
-    this.paths.forEach(path => {
-      let points: Array<integer> = [];
-
-      path.forEach((tile, index) => {
-        if (index !== 0) {
-          let x = tile.pixelX + tile.width / 2
-          let y = tile.pixelY + tile.height / 2
-          let lastX = path[index - 1].pixelX + path[index - 1].width / 2
-          let lastY = path[index - 1].pixelY + path[index - 1].height / 2
-          var line = new Phaser.Curves.Line([lastX, lastY, x, y]);
-          this.graphics.lineStyle(2, 0xffffff, 1);
-          line.draw(this.graphics);
-        }
-      })
-
-
-
-    })
-  }
   getTile(x: integer, y: integer) {
     try {
       let tile = this.map.getTileAtWorldXY(x, y)

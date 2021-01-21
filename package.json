@@ -16,6 +16,7 @@
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^3.2.0",
     "serve": "^11.3.1",
     "ts-loader": "^5.4.5",
@@ -32,6 +33,7 @@
     "easystarjs": "^0.4.3",
     "phaser": "^3.23.0",
     "phaser-plugin-scene-watcher": "^4.2.0",
-    "phaser3-rex-plugins": "^1.1.19"
+    "phaser3-rex-plugins": "^1.1.19",
+    "tailwindcss": "^2.0.2"
   }
 }
