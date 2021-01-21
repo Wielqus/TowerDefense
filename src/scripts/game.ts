@@ -44,18 +44,42 @@ window.addEventListener('load', () => {
   const secondsToStartText: HTMLElement | null = document.querySelector('#seconds-to-start-text')
   const roundText: HTMLElement | null = document.querySelector('#round-text')
   const startNowButton: HTMLButtonElement | null = document.querySelector('#start-now-button')
+  const healthDiffrenceText: HTMLElement | null = document.querySelector("#health-diffrence-text")
+  const healthText: HTMLElement | null = document.querySelector('#health-text')
   const emitter = EventDispatcher.getInstance()
+  let textTimer: any
 
+    
   /*
   if(startGame){
     startGame.style.display = "none";
   }
   game.scene.start('MainScene', {map: maps[0]})
   */
-
+  
   startNowButton?.addEventListener('click', () => {
     emitter.emit('stop_counting')
     startNowButton.disabled = true
+  })
+
+  emitter.on('changeHealth', (actualHealth: integer, previousHealth: integer) => {
+    if(healthDiffrenceText){
+      const diffrence = (actualHealth - previousHealth)
+      if(diffrence){
+        healthDiffrenceText.classList.add('show-transition');
+        healthDiffrenceText.textContent = diffrence.toString()
+        window.clearTimeout(textTimer)
+        textTimer = window.setTimeout(() => {
+          healthDiffrenceText.classList.remove('show-transition')
+        }, 3000);
+      }
+      if(healthText){
+        healthText.textContent = actualHealth.toString()
+      }
+      
+      
+    }
+    
   })
 
   emitter.on('change_time', (time, round) => {
@@ -63,7 +87,6 @@ window.addEventListener('load', () => {
       secondsToStartText.textContent = time
       roundText.textContent = round
     }
-    console.log(time)
     if(time === 0 && startNowButton){
       startNowButton.disabled = true
     }

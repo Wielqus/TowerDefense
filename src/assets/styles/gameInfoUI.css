@@ -43,3 +43,24 @@
 .gameInfoUI .fa-dollar-sign{
     color: goldenrod;
 }
+
+.hide-transition {
+    opacity: 0;
+    transition: all 0.5s;
+  }
+
+.show-transition {
+    opacity: 1 !important;
+    transition: all 0.5s;
+  }
+
+
+  .app {
+    background-color:#f8f8f8;
+    opacity:0;
+  }
+  
+  .app.change {
+    opacity: 1;
+    transition: all 3s;
+  }

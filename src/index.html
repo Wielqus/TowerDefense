@@ -12,6 +12,7 @@
   <link rel="manifest" href="./manifest.json" />
 
   <link rel="stylesheet" href="assets/styles/rpgui.css">
+  <link rel="stylesheet" href="assets/styles/gameInfoUI.css">
   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 
   <meta name="mobile-web-app-capable" content="yes" />
@@ -108,14 +109,20 @@
 
     <div style="display:none;" class="rpgui-content rpgui-container self-center  flex flex-col w-40 h-60 justify-center game-container">
       <div class="flex">
-        <div class="rpgui-icon heart"></div><p class="self-center">100</p>
+        <div class="rpgui-icon heart"></div>
+        <p id="health-text" class="self-center"></p>
+         <p id="health-diffrence-text" style="color:red" class="opacity-0 self-center text-red-200"></p>
       </div>
       <div class="flex">
-        <div class="rpgui-icon coin"></div> <p class="self-center">500</p>
+        <div class="rpgui-icon coin"></div> 
+        <p class="self-center">500</p>
       </div>
       
       
   </div>
+
+  
+
 
 
 

@@ -55,7 +55,9 @@ export default class WafeManger{
             wave.forEach((monster) => {
                 
                 setTimeout(() => {
-                    const monsterInstance = new Monster(this.scene, this.map.getRandomPath(), monster)
+                    const monsterInstance = new Monster(this.scene, this.map.getRandomPath(), monster).on("finish", () => {
+                        this.emitter.emit('monsterFinished', monster)
+                      })
                 }, Math.random() * 5000)
             })
         }
