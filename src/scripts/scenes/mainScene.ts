@@ -16,17 +16,20 @@ export default class MainScene extends Phaser.Scene {
   constructor() {
     super({ key: 'MainScene' })
     this.emitter = EventDispatcher.getInstance();
-    this.health = 2000
-    this.emitter.emit('changeHealth', this.health, this.health)
-    
   }
 
   init(data) {
+    this.health = 100
+    this.emitter.emit('changeHealth', this.health, this.health)
     this.map = new Map(this, data.map)
     this.waveManager = new WaveManager(this, this.map.mapData.waves, this.map)
     this.emitter.on('monsterFinished', (monster: IMonster) => {
       this.emitter.emit('changeHealth', this.health - monster.damage, this.health)
       this.health = this.health - monster.damage
+      if(this.health <= 0){
+        this.emitter.emit("lose")
+        console.log("lose")
+      }
     })
     
   }

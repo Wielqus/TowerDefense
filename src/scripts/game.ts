@@ -47,6 +47,10 @@ window.addEventListener('load', () => {
   const healthDiffrenceText: HTMLElement | null = document.querySelector("#health-diffrence-text")
   const healthText: HTMLElement | null = document.querySelector('#health-text')
   const roundInfoContainer: HTMLElement | null = document.querySelector('#round-info-container')
+  const winModal: HTMLElement | null = document.querySelector("#win-modal")
+  const loseModal: HTMLElement | null = document.querySelector("#lose-modal")
+  const playAgainButtons: Array<HTMLButtonElement> = Array.from(document.querySelectorAll('.play-again-button'))
+  const menuButtons: Array<HTMLButtonElement> = Array.from(document.querySelectorAll(".menu-button"))
   const emitter = EventDispatcher.getInstance()
   let textTimer: any
 
@@ -57,9 +61,42 @@ window.addEventListener('load', () => {
   }
   game.scene.start('MainScene', {map: maps[0]})
   */
+
+  playAgainButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      if(mapSelect){
+        loseModal?.classList.add('hidden')
+        winModal?.classList.add('hidden')
+        game.scene.start('MainScene', {map: maps[mapSelect.value]});
+      }
+    })
+  })
+
+  menuButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      loseModal?.classList.add('hidden')
+      winModal?.classList.add('hidden')
+      gameContainers.forEach(container => {
+        container.style.display = "none"
+        if(startGameContainer){
+          startGameContainer.style.display = "flex"
+        }
+      })
+    })
+  })
   
   startNowButton?.addEventListener('click', () => {
     emitter.emit('stop_counting')
+  })
+
+  emitter.on("win", () => {
+    winModal?.classList.toggle('hidden')
+    game.scene.stop("MainScene")
+  })
+
+  emitter.on("lose", () => {
+    loseModal?.classList.toggle('hidden')
+    game.scene.stop("MainScene")
   })
 
   emitter.on('changeHealth', (actualHealth: integer, previousHealth: integer) => {
