@@ -27,6 +27,9 @@ export let maps = [
                 monsters.skeleton,
                 monsters.skeleton,
                 monsters.skeleton,
+                monsters.skeleton,
+                monsters.skeleton,
+                
             ],
             [
                 monsters.skeleton,

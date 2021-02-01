@@ -65,8 +65,12 @@ window.addEventListener('load', () => {
   playAgainButtons.forEach(button => {
     button.addEventListener('click', () => {
       if(mapSelect){
-        loseModal?.classList.add('hidden')
-        winModal?.classList.add('hidden')
+        if(!loseModal?.classList.contains('hidden')){
+          loseModal?.classList.add('hidden')
+        }
+        if(!winModal?.classList.contains('hidden')){
+          winModal?.classList.add('hidden')
+        }
         game.scene.start('MainScene', {map: maps[mapSelect.value]});
       }
     })
@@ -74,12 +78,16 @@ window.addEventListener('load', () => {
 
   menuButtons.forEach(button => {
     button.addEventListener('click', () => {
-      loseModal?.classList.add('hidden')
-      winModal?.classList.add('hidden')
+      if(!loseModal?.classList.contains('hidden')){
+        loseModal?.classList.add('hidden')
+      }
+      if(!winModal?.classList.contains('hidden')){
+        winModal?.classList.add('hidden')
+      }
       gameContainers.forEach(container => {
         container.style.display = "none"
         if(startGameContainer){
-          startGameContainer.style.display = "flex"
+          startGameContainer.style.display = "fl ex"
         }
       })
     })
@@ -90,12 +98,16 @@ window.addEventListener('load', () => {
   })
 
   emitter.on("win", () => {
-    winModal?.classList.toggle('hidden')
+    if(winModal?.classList.contains('hidden')){
+      winModal?.classList.remove('hidden')
+    }
     game.scene.stop("MainScene")
   })
 
   emitter.on("lose", () => {
-    loseModal?.classList.toggle('hidden')
+    if(loseModal?.classList.contains('hidden')){
+      loseModal?.classList.remove('hidden')
+    }
     game.scene.stop("MainScene")
   })
 

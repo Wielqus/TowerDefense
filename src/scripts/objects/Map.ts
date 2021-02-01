@@ -52,7 +52,7 @@ export default class Map {
 
     this.map.setLayer("Top")
 
-    this.scene.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+    //this.scene.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     this.graphics = this.scene.add.graphics();
     this.loadTiles()
     this.findPath(tileSets)
